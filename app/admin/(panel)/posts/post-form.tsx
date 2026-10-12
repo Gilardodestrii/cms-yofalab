@@ -22,14 +22,6 @@ export type PostFormInitial = {
   seoDescription?: string;
 };
 
-function toDatetimeLocal(value: Date | string | null | undefined): string {
-  if (!value) return "";
-  const d = value instanceof Date ? value : new Date(value);
-  if (Number.isNaN(d.getTime())) return "";
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
-}
-
 /**
  * Formulir tambah/ubah artikel: judul, kategori, ringkasan, konten Tiptap,
  * gambar utama (MediaPicker), status, jadwal terbit, SEO.
@@ -143,6 +135,3 @@ export function PostForm({
     </form>
   );
 }
-
-/** Helper ekspor agar halaman edit bisa normalisasi `publishedAt` Date → input. */
-export { toDatetimeLocal };

@@ -46,10 +46,13 @@ OUT_DIR="${BACKUP_DIR:-$HOME/backup-yofalab}/$STAMP"
 mkdir -p "$OUT_DIR"
 
 echo "==> Dump database $DB_NAME"
+# --no-tablespaces: pengguna aplikasi tidak punya hak PROCESS (dibutuhkan
+# hanya untuk mengekspor metadata tablespace, tidak diperlukan untuk restore).
 MYSQL_PWD="$DB_PASS" mysqldump \
   --host="${DB_HOST%%:*}" \
   --user="$DB_USER" \
   --single-transaction \
+  --no-tablespaces \
   --routines --triggers \
   "$DB_NAME" | gzip > "$OUT_DIR/db-$DB_NAME.sql.gz"
 

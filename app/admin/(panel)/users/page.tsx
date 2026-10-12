@@ -109,6 +109,7 @@ export default async function AdminUsersPage({
         </Link>
       </div>
       <DataTable
+        basePath="/admin/users"
         columns={columns}
         rows={rows}
         total={total}
@@ -119,6 +120,7 @@ export default async function AdminUsersPage({
         searchValue={search}
         searchPlaceholder="Cari nama atau email…"
         emptyState="Belum ada pengguna."
+      params={params}
       />
     </div>
   );

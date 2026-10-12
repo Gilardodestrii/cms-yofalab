@@ -144,17 +144,8 @@ export default async function AdminCommentsPage({
           {total} komentar{pendingCount > 0 && ` · ${pendingCount} menunggu moderasi`}.
         </p>
       </div>
-      <form className="flex flex-wrap gap-2" method="get">
-        {search && <input type="hidden" name="q" value={search} />}
-        <select name="status" defaultValue={statusFilter ?? ""} aria-label="Filter status" className="input-admin w-auto">
-          <option value="">Semua status</option>
-          <option value="PENDING">Menunggu</option>
-          <option value="APPROVED">Disetujui</option>
-          <option value="SPAM">Spam</option>
-        </select>
-        <button type="submit" className="btn-admin-secondary">Filter</button>
-      </form>
       <DataTable
+        basePath="/admin/comments"
         columns={columns}
         rows={rows}
         total={total}
@@ -165,6 +156,7 @@ export default async function AdminCommentsPage({
         searchValue={search}
         searchPlaceholder="Cari nama, email, atau isi komentar…"
         emptyState="Belum ada komentar."
+      params={params}
       />
     </div>
   );

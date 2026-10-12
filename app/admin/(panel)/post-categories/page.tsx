@@ -83,6 +83,7 @@ export default async function AdminPostCategoriesPage({
         </Link>
       </div>
       <DataTable
+        basePath="/admin/post-categories"
         columns={columns}
         rows={rows}
         total={total}
@@ -93,6 +94,7 @@ export default async function AdminPostCategoriesPage({
         searchValue={search}
         searchPlaceholder="Cari nama kategori…"
         emptyState="Belum ada kategori."
+      params={params}
       />
     </div>
   );

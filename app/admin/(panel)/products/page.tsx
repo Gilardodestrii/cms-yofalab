@@ -136,23 +136,8 @@ export default async function AdminProductsPage({
           Tambah produk
         </Link>
       </div>
-      <form className="flex flex-wrap gap-2" method="get">
-        {search && <input type="hidden" name="q" value={search} />}
-        <select name="status" defaultValue={statusFilter ?? ""} aria-label="Filter status" className="input-admin w-auto">
-          <option value="">Semua status</option>
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>{STATUS_LABEL[s]}</option>
-          ))}
-        </select>
-        <select name="categoryId" defaultValue={categoryId?.toString() ?? ""} aria-label="Filter kategori" className="input-admin w-auto">
-          <option value="">Semua kategori</option>
-          {categories.map((c) => (
-            <option key={c.id.toString()} value={c.id.toString()}>{c.name}</option>
-          ))}
-        </select>
-        <button type="submit" className="btn-admin-secondary">Filter</button>
-      </form>
       <DataTable
+        basePath="/admin/products"
         columns={columns}
         rows={rows}
         total={total}
@@ -163,7 +148,36 @@ export default async function AdminProductsPage({
         searchValue={search}
         searchPlaceholder="Cari nama produk…"
         emptyState="Belum ada produk."
-      />
+        params={params}
+        toolbar={
+          <form method="get" action="/admin/products" className="flex flex-wrap items-center gap-2">
+            {params.q ? <input type="hidden" name="q" value={String(params.q)} /> : null}
+            <select
+              name="status"
+              defaultValue={statusFilter ?? ""}
+              aria-label="Filter status"
+              className="input-admin h-9 w-auto"
+            >
+              <option value="">Semua status</option>
+              {STATUS_OPTIONS.map((s) => (
+                <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+              ))}
+            </select>
+            <select
+              name="categoryId"
+              defaultValue={categoryRaw}
+              aria-label="Filter kategori"
+              className="input-admin h-9 w-auto"
+            >
+              <option value="">Semua kategori</option>
+              {categories.map((c) => (
+                <option key={c.id.toString()} value={c.id.toString()}>{c.name}</option>
+              ))}
+            </select>
+            <button type="submit" className="btn-admin-secondary h-9">Filter</button>
+          </form>
+        }
+        />
     </div>
   );
 }

@@ -4,7 +4,8 @@ import { requireRole } from "@/lib/auth/guards";
 import { CONTENT_ROLES } from "@/lib/auth/roles";
 import { Breadcrumb } from "@/components/admin/breadcrumb";
 import { db } from "@/lib/db";
-import { PostForm, toDatetimeLocal } from "../../post-form";
+import { PostForm } from "../../post-form";
+import { toDatetimeLocal } from "@/lib/datetime";
 import { updatePostAction } from "../../actions";
 
 export const metadata: Metadata = {

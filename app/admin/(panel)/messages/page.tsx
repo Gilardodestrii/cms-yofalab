@@ -153,17 +153,8 @@ export default async function AdminMessagesPage({
           Ekspor CSV
         </a>
       </div>
-      <form className="flex flex-wrap gap-2" method="get">
-        {search && <input type="hidden" name="q" value={search} />}
-        <select name="status" defaultValue={statusFilter ?? ""} aria-label="Filter status" className="input-admin w-auto">
-          <option value="">Semua status</option>
-          {STATUS_OPTIONS.map((s) => (
-            <option key={s} value={s}>{STATUS_LABEL[s]}</option>
-          ))}
-        </select>
-        <button type="submit" className="btn-admin-secondary">Filter</button>
-      </form>
       <DataTable
+        basePath="/admin/messages"
         columns={columns}
         rows={rows}
         total={total}
@@ -174,6 +165,7 @@ export default async function AdminMessagesPage({
         searchValue={search}
         searchPlaceholder="Cari nama, email, subjek, atau isi pesan…"
         emptyState="Belum ada pesan."
+      params={params}
       />
     </div>
   );
