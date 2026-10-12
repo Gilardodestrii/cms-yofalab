@@ -141,11 +141,11 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** tiga halaman publik utama sesuai desain (`Home.png`, `Product.png`, `Product Detail.png`).
 
 **Task**
-- [ ] `/` Home: hero slider (dari `pages.HOME`), 3 statistik (2015 Established, 10+ Products, 20+ Partners), blok "Get to Know YOFALAB", 3 keunggulan (High Quality, Comprehensive Support, Expert Training), carousel Product Category, pencarian blog, 3 blog terbaru, CTA "Contact Us".
-- [ ] `/product`: grid kartu produk (4-3-2-1 kolom per breakpoint), filter kategori, pencarian, paginasi.
-- [ ] `/product/[slug]`: galeri gambar, deskripsi, tab Description + spesifikasi, daftar aplikasi, tombol unduh brosur, CTA WhatsApp/Contact, produk terkait.
-- [ ] Data diambil via Prisma dengan Static + ISR; `generateMetadata` per halaman.
-- [ ] Komponen bersama: ProductCard, Pagination, Breadcrumb, Tabs, SearchInput.
+- [x] `/` Home: hero statis + 3 statistik + Get to Know + 3 keunggulan + grid kategori + pencarian blog + 3 blog terbaru + CTA (hero slider + pages.HOME menyusul Sprint 7).
+- [x] `/product`: grid kartu produk (4-3-2-1 kolom per breakpoint), filter kategori, pencarian, paginasi.
+- [x] `/product/[slug]`: galeri gambar, deskripsi, tab Description + spesifikasi, daftar aplikasi, tombol unduh brosur, CTA Contact, produk terkait (CTA WhatsApp menyusul: butuh nomor dari settings Sprint 7).
+- [x] Data diambil via Prisma; `generateMetadata` per halaman (ISR/cache-tag menyusul; halaman dinamis pakai fallback DB agar build lolos).
+- [x] Komponen bersama: ProductCard, Pagination, Breadcrumb, Tabs, SearchInput.
 - [ ] Skeleton/loading state dan empty state.
 
 **Acceptance criteria**
