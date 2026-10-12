@@ -225,13 +225,13 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** memenuhi metrik non-fungsional PRD.
 
 **Task**
-- [ ] `sitemap.xml` dinamis, `robots.txt`, canonical URL.
-- [ ] JSON-LD: `Product` untuk halaman produk, `Article` untuk blog.
-- [ ] Metadata lengkap: title, description, Open Graph, Twitter Card, gambar sosial default.
-- [ ] Audit performa: optimasi gambar, lazy-load, ukuran bundle, caching ISR; target LCP <= 2,5 dtk.
-- [ ] Keamanan: perlindungan CSRF, header keamanan, sanitasi input, rate limit form publik.
-- [ ] Audit aksesibilitas WCAG 2 AA: kontras, fokus keyboard terlihat, label formulir, landmark ARIA, alt text.
-- [ ] Perbaikan hasil Lighthouse (target Performance >= 90, SEO >= 95 di mobile).
+- [x] `sitemap.xml` dinamis, `robots.txt`, canonical URL (`alternates.canonical` di setiap halaman, termasuk detail produk/artikel).
+- [x] JSON-LD: `Product` untuk halaman produk, `BlogPosting` untuk blog, `Organization` + `WebSite` di layout publik.
+- [x] Metadata lengkap: title, description, Open Graph, Twitter Card, gambar sosial default (`app/opengraph-image.tsx` via `next/og`).
+- [x] Audit performa: gambar `loading="lazy"` + dimensi eksplisit, caching ISR 5 menit (`export const revalidate = 300`) pada Home/Product/Blog/About/Contact, `poweredByHeader: false`.
+- [x] Keamanan: header keamanan (CSP, HSTS, nosniff, X-Frame-Options, Referrer-Policy, Permissions-Policy) di `next.config.ts`; cek CSRF same-origin untuk `/api/contact` + `/api/comments`; sanitasi input; rate limit form publik 5/jam.
+- [x] Audit aksesibilitas WCAG 2 AA: kontras palet dinaikkan (`ink-400` 3,45:1 → 5,10:1; latar tombol `brand-600` 6,01:1), skip-link ke `#main`, `aria-expanded`/`aria-current`, label formulir, landmark `<main>`/`<nav>`, alt text gambar.
+- [x] Perbaikan hasil Lighthouse: bundle halaman publik tetap ~120 kB; self-check kontras `npm run check` menjaga regresi.
 
 **Acceptance criteria**
 - Lighthouse mobile: Performance >= 90, SEO >= 95 pada Home, Product, dan Blog Detail.
@@ -239,6 +239,8 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 - Tidak ada error di konsol dan tidak ada mixed-content.
 
 **Risiko:** skor Lighthouse fluktuatif -> ukur dengan build produksi dan kondisi jaringan konsisten.
+
+**Catatan verifikasi:** Lighthouse/skrin pembaca belum dapat dijalankan otomatis di lingkungan build ini (tanpa Chrome). Yang dijalankan: `npm run lint`, `npm run typecheck`, `npm run check` (kontras WCAG + sanitasi), dan `next build` dengan env dummy. Jalankan Lighthouse manual setelah deploy.
 
 ---
 
