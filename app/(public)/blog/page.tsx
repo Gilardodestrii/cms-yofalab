@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   title: "Blog",
   description:
     "Artikel dan informasi seputar alat kesehatan, reagen laboratorium, serta kesehatan dari YOFALAB Indonesia.",
+  alternates: { canonical: "/blog" },
 };
+
+/** ISR 5 menit: daftar artikel menyusul artikel baru terjadwal. */
+export const revalidate = 300;
 
 const PER_PAGE = 9;
 
@@ -102,8 +106,8 @@ export default async function BlogPage({
             href="/blog"
             aria-current={!activeCategory ? "page" : undefined}
             className={!activeCategory
-              ? "rounded-full bg-brand-500 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
-              : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-500 hover:text-brand-600"}
+              ? "rounded-full bg-brand-600 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
+              : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-600 hover:text-brand-600"}
           >
             Semua
           </Link>
@@ -113,8 +117,8 @@ export default async function BlogPage({
               href={`/blog?kategori=${c.slug}`}
               aria-current={activeCategory?.id === c.id ? "page" : undefined}
               className={activeCategory?.id === c.id
-                ? "rounded-full bg-brand-500 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
-                : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-500 hover:text-brand-600"}
+                ? "rounded-full bg-brand-600 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
+                : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-600 hover:text-brand-600"}
             >
               {c.name}
             </Link>

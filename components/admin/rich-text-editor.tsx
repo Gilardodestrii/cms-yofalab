@@ -55,7 +55,7 @@ export function RichTextEditor({
   }
 
   const btn = (active: boolean) =>
-    `h-8 min-w-8 px-2 font-body text-sm rounded-sm ${active ? "bg-brand-500 text-white" : "text-ink-600 hover:bg-surface-muted"}`;
+    `h-8 min-w-8 px-2 font-body text-sm rounded-sm ${active ? "bg-brand-600 text-white" : "text-ink-600 hover:bg-surface-muted"}`;
 
   const addLink = () => {
     const url = window.prompt("URL tautan (https://…):");

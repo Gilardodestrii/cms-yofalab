@@ -6,7 +6,11 @@ export const metadata: Metadata = {
   title: "About Us",
   description:
     "Profil YOFALAB Indonesia: visi, misi, dan riset pengembangan di bidang alat kesehatan.",
+  alternates: { canonical: "/about" },
 };
+
+/** ISR 5 menit: konten About dari `pages.ABOUT`. */
+export const revalidate = 300;
 
 /** Halaman About Us: profil, Vision, Mission, R&D dari `pages.ABOUT`. */
 export default async function AboutPage() {
@@ -48,7 +52,7 @@ export default async function AboutPage() {
                 <ul className="mt-3 flex flex-col gap-2">
                   {b.list.map((item, i) => (
                     <li key={i} className="flex gap-2 font-body text-sm text-ink-600">
-                      <span aria-hidden="true" className="text-brand-500">•</span>
+                      <span aria-hidden="true" className="text-brand-600">•</span>
                       <span>{item}</span>
                     </li>
                   ))}

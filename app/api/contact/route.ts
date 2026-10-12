@@ -4,7 +4,7 @@ import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { sendContactNotification } from "@/lib/mail";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp, hashIp } from "@/lib/request";
+import { getClientIp, hashIp, isSameOrigin } from "@/lib/request";
 import { contactSchema } from "@/lib/validators/public";
 
 /**
@@ -13,6 +13,10 @@ import { contactSchema } from "@/lib/validators/public";
  * Rate limit: 5/jam per IP.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Permintaan lintas situs ditolak." }, { status: 403 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

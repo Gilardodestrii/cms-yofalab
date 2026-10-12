@@ -10,7 +10,11 @@ export const metadata: Metadata = {
   title: "Home",
   description:
     "YOFALAB Indonesia - penyedia alat kesehatan dan reagen laboratorium terpercaya sejak 2015.",
+  alternates: { canonical: "/" },
 };
+
+/** ISR 5 menit: blok Home dari `pages.HOME` + produk/artikel terbaru. */
+export const revalidate = 300;
 
 /**
  * Home publik: hero + slide, statistik, Get to Know, keunggulan (dari
@@ -137,7 +141,7 @@ export default async function HomePage() {
         </h2>
         <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
           {content.getToKnowBody}{" "}
-          <Link href="/about" className="font-semibold text-brand-500 hover:text-brand-600">
+          <Link href="/about" className="font-semibold text-brand-600 hover:text-brand-600">
             Pelajari lebih lanjut →
           </Link>
         </p>
@@ -161,7 +165,7 @@ export default async function HomePage() {
           <h2 className="font-heading text-2xl font-semibold text-ink-900">
             Product Category
           </h2>
-          <Link href="/product" className="font-body text-sm font-semibold text-brand-500 hover:text-brand-600">
+          <Link href="/product" className="font-body text-sm font-semibold text-brand-600 hover:text-brand-600">
             Lihat semua →
           </Link>
         </div>
@@ -204,7 +208,7 @@ export default async function HomePage() {
           </div>
           {latestPosts.length === 0 ? (
             <p className="mt-6 text-center font-body text-base text-ink-400">
-              Artikel segera hadir. Lihat <Link href="/blog" className="font-semibold text-brand-500">semua artikel →</Link>
+              Artikel segera hadir. Lihat <Link href="/blog" className="font-semibold text-brand-600">semua artikel →</Link>
             </p>
           ) : (
             <ul className="mt-6 grid gap-6 sm:grid-cols-3">
@@ -220,12 +224,12 @@ export default async function HomePage() {
                   </Link>
                   <div className="flex flex-1 flex-col p-4">
                     <h3 className="font-heading text-base font-semibold text-ink-900">
-                      <Link href={`/blog/${p.slug}`} className="hover:text-brand-500">{p.title}</Link>
+                      <Link href={`/blog/${p.slug}`} className="hover:text-brand-600">{p.title}</Link>
                     </h3>
                     {p.excerpt && (
                       <p className="mt-2 line-clamp-2 font-body text-sm text-ink-600">{p.excerpt}</p>
                     )}
-                    <Link href={`/blog/${p.slug}`} className="mt-3 font-body text-sm font-semibold text-brand-500 hover:text-brand-600">
+                    <Link href={`/blog/${p.slug}`} className="mt-3 font-body text-sm font-semibold text-brand-600 hover:text-brand-600">
                       Read more
                     </Link>
                   </div>

@@ -104,7 +104,7 @@ export default async function AdminDashboardPage() {
           </h2>
           <Link
             href="/admin/messages"
-            className="font-body text-sm font-semibold text-brand-500"
+            className="font-body text-sm font-semibold text-brand-600"
           >
             Lihat semua
           </Link>

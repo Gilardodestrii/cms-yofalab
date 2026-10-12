@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function ForbiddenPage() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center bg-surface-admin px-4 text-center">
-      <p className="font-heading text-6xl font-bold text-brand-500">403</p>
+      <p className="font-heading text-6xl font-bold text-brand-600">403</p>
       <h1 className="mt-4 text-xl font-semibold text-ink-900">
         Akses ditolak
       </h1>

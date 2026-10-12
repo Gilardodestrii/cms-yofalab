@@ -19,6 +19,24 @@ export function getClientIp(headers: Headers): string | null {
 }
 
 /**
+ * Cek CSRF sederhana: Origin/Referer harus se-origin dengan Host.
+ * Server Action Next.js sudah punya proteksi sendiri; ini untuk route handler
+ * POST publik yang tidak lewat Server Action (`/api/contact`, `/api/comments`).
+ * ponytail: cukup untuk same-origin form; ganti ke token ganda bila ada SPA lintas domain.
+ */
+export function isSameOrigin(request: Request): boolean {
+  const host = request.headers.get("host");
+  if (!host) return false;
+  const source = request.headers.get("origin") ?? request.headers.get("referer");
+  if (!source) return false;
+  try {
+    return new URL(source).host === host;
+  } catch {
+    return false;
+  }
+}
+
+/**
  * Hash IP dengan SHA-256 sebelum disimpan.
  * Alasan privasi: `comments.ip_hash` dan `contact_messages.ip_hash` tidak boleh
  * menyimpan IP mentah. `salt` opsional dari AUTH_SECRET agar tidak dapat

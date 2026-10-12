@@ -38,14 +38,14 @@ export function ProductCard({
       <div className="flex flex-1 flex-col items-center gap-1 p-4 text-center">
         <p className="label-caps">{categoryName}</p>
         <h3 className="font-heading text-base font-semibold text-ink-900">
-          <Link href={`/product/${slug}`} className="hover:text-brand-500">
+          <Link href={`/product/${slug}`} className="hover:text-brand-600">
             {name}
           </Link>
         </h3>
         <span aria-hidden="true" className="my-1 h-px w-10 bg-line" />
         <Link
           href={`/product/${slug}`}
-          className="font-body text-sm font-semibold text-brand-500 hover:text-brand-600"
+          className="font-body text-sm font-semibold text-brand-600 hover:text-brand-600"
         >
           Read more
         </Link>

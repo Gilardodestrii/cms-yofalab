@@ -26,7 +26,7 @@ export function Tabs({
             onClick={() => setActive(i)}
             className={`-mb-px border-b-[3px] pb-2 font-heading text-sm font-semibold uppercase tracking-wide ${
               active === i
-                ? "border-brand-500 text-brand-600"
+                ? "border-brand-600 text-brand-600"
                 : "border-transparent text-ink-400 hover:text-ink-600"
             }`}
           >

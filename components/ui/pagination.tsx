@@ -41,7 +41,7 @@ export function Pagination({
           aria-label={`Halaman ${p}`}
           className={
             p === page
-              ? "inline-flex h-9 min-w-9 items-center justify-center rounded-sm bg-brand-500 px-3 font-heading text-sm font-semibold text-white"
+              ? "inline-flex h-9 min-w-9 items-center justify-center rounded-sm bg-brand-600 px-3 font-heading text-sm font-semibold text-white"
               : "btn-admin-secondary h-9 min-w-9 px-3 text-sm"
           }
         >

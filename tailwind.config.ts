@@ -22,7 +22,7 @@ const config: Config = {
           700: "#7A2F6B",
           link: "#FFD6EC",
         },
-        ink: { 900: "#2B2B2B", 600: "#5A5A5A", 400: "#8A8A8A" },
+        ink: { 900: "#2B2B2B", 600: "#5A5A5A", 400: "#6E6E6E" },
         line: "#E6E6E6",
         surface: { DEFAULT: "#FFFFFF", muted: "#F2F2F2", admin: "#F7F5F8" },
         coral: "#F27A7A",

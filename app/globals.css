@@ -85,9 +85,9 @@
     @apply rounded-sm bg-surface-muted px-1 py-0.5 font-mono text-sm;
   }
 
-  /* Tombol utama: latar brand-500, teks putih, tinggi 40 px. */
+  /* Tombol utama: latar brand-600 (kontras teks putih 6:1), tinggi 40 px. */
   .btn-primary {
-    @apply inline-flex h-10 items-center justify-center rounded-sm bg-brand-500 px-5 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex h-10 items-center justify-center rounded-sm bg-brand-600 px-5 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
   /* Tombol hero: latar brand-700, radius md. */
@@ -109,7 +109,7 @@
 
   /* Tombol admin: tinggi 36 px, radius sm, kepadatan lebih rapat. */
   .btn-admin {
-    @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm bg-brand-500 px-4 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm bg-brand-600 px-4 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
   /* Tombol sekunder admin: garis, latar putih. */
@@ -122,9 +122,9 @@
     @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm bg-danger px-4 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
-  /* Input admin: tinggi 40 px, border line, fokus cincin brand-500. */
+  /* Input admin: tinggi 40 px, border line, fokus cincin brand-600. */
   .input-admin {
-    @apply h-10 w-full rounded-sm border border-line bg-surface px-3 font-body text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 disabled:cursor-not-allowed disabled:bg-surface-muted;
+    @apply h-10 w-full rounded-sm border border-line bg-surface px-3 font-body text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-600/30 disabled:cursor-not-allowed disabled:bg-surface-muted;
   }
 
   /* Label field admin. */

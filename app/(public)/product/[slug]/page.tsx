@@ -6,6 +6,7 @@ import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { ProductCard } from "@/components/ui/product-card";
 import { Tabs } from "@/components/ui/tabs";
 import { getContactSetting, whatsappLink } from "@/lib/settings";
+import { siteConfig } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -26,6 +27,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: product.seoTitle || product.name,
     description: product.seoDescription || product.shortDescription || `Detail produk ${product.name} YOFALAB Indonesia.`,
+    alternates: { canonical: `/product/${slug}` },
+    openGraph: {
+      type: "website",
+      title: product.seoTitle || product.name,
+      description:
+        product.seoDescription ||
+        product.shortDescription ||
+        `Detail produk ${product.name} YOFALAB Indonesia.`,
+    },
   };
 }
 
@@ -183,7 +193,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       <ul className="mt-3 flex flex-col gap-2">
                         {specs.map((s, i) => (
                           <li key={i} className="flex gap-2 font-body text-base text-ink-600">
-                            <span aria-hidden="true" className="text-brand-500">•</span>
+                            <span aria-hidden="true" className="text-brand-600">•</span>
                             <span><strong className="text-ink-900">{s.key}:</strong> {s.value}</span>
                           </li>
                         ))}
@@ -196,7 +206,7 @@ export default async function ProductDetailPage({ params }: Props) {
                       <ul className="mt-3 flex flex-col gap-2">
                         {apps.map((a, i) => (
                           <li key={i} className="flex gap-2 font-body text-base text-ink-600">
-                            <span aria-hidden="true" className="text-brand-500">•</span>
+                            <span aria-hidden="true" className="text-brand-600">•</span>
                             <span>{a}</span>
                           </li>
                         ))}
@@ -252,6 +262,8 @@ export default async function ProductDetailPage({ params }: Props) {
             description: product.shortDescription ?? undefined,
             category: product.category.name,
             image: primary?.media.path,
+            url: `${siteConfig.url}/product/${product.slug}`,
+            brand: { "@type": "Brand", name: siteConfig.name },
           }),
         }}
       />

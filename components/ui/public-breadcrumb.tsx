@@ -22,7 +22,7 @@ export function PublicBreadcrumb({
                 <span aria-hidden="true" className="text-ink-400">/</span>
               )}
               {item.href && !last ? (
-                <Link href={item.href} className="text-brand-500 hover:text-brand-600">
+                <Link href={item.href} className="text-brand-600 hover:text-brand-600">
                   {item.label}
                 </Link>
               ) : (

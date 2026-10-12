@@ -10,7 +10,7 @@ import { siteConfig } from "@/lib/site";
  * Menu aktif berwarna brand-500 dengan garis bawah 2 px.
  * Di mobile menjadi panel geser dengan ikon burger.
  */
-export function Header() {
+export function Header({ siteName }: { siteName: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -23,7 +23,7 @@ export function Header() {
         <Link
           href="/"
           className="font-heading text-xl font-bold text-brand-600"
-          aria-label={`${siteConfig.name} - Home`}
+          aria-label={`${siteName} - Home`}
         >
           YOFALAB
         </Link>
@@ -37,9 +37,9 @@ export function Header() {
               key={item.href}
               href={item.href}
               className={
-                "border-b-2 py-2 font-body text-[15px] font-medium transition-colors duration-150 ease-out hover:text-brand-500 " +
+                "border-b-2 py-2 font-body text-[15px] font-medium transition-colors duration-150 ease-out hover:text-brand-600 " +
                 (isActive(item.href)
-                  ? "border-brand-500 text-brand-500"
+                  ? "border-brand-600 text-brand-600"
                   : "border-transparent text-ink-600")
               }
               aria-current={isActive(item.href) ? "page" : undefined}
@@ -54,7 +54,7 @@ export function Header() {
           className="inline-flex h-10 w-10 items-center justify-center rounded-sm text-ink-900 md:hidden"
           aria-expanded={open}
           aria-controls="mobile-nav"
-          aria-label="Buka menu navigasi"
+          aria-label={open ? "Tutup menu navigasi" : "Buka menu navigasi"}
           onClick={() => setOpen((v) => !v)}
         >
           <span aria-hidden className="text-2xl">
@@ -78,7 +78,7 @@ export function Header() {
                   className={
                     "block py-3 font-body text-base font-medium " +
                     (isActive(item.href)
-                      ? "text-brand-500"
+                      ? "text-brand-600"
                       : "text-ink-600")
                   }
                   aria-current={isActive(item.href) ? "page" : undefined}

@@ -111,7 +111,7 @@ export function MediaManager({ items }: { items: MediaRow[] }) {
             const file = e.target.files?.[0];
             if (file) onUpload(file);
           }}
-          className="block w-full font-body text-sm text-ink-600 file:mr-3 file:rounded-sm file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:font-heading file:text-sm file:font-semibold file:text-white"
+          className="block w-full font-body text-sm text-ink-600 file:mr-3 file:rounded-sm file:border-0 file:bg-brand-600 file:px-4 file:py-2 file:font-heading file:text-sm file:font-semibold file:text-white"
         />
         <p className="mt-2 font-body text-xs text-ink-400">
           Format: JPG, PNG, WEBP, GIF, SVG, PDF. Maksimum 5 MB per berkas.
@@ -147,7 +147,7 @@ export function MediaManager({ items }: { items: MediaRow[] }) {
                 <div className="mt-2 flex flex-wrap gap-2">
                   <button
                     type="button"
-                    className="font-body text-xs font-semibold text-brand-500"
+                    className="font-body text-xs font-semibold text-brand-600"
                     onClick={() => copyUrl(m.path)}
                   >
                     Salin URL

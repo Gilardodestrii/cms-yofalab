@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   title: "Contact Us",
   description:
     "Hubungi YOFALAB Indonesia: alamat, telepon, WhatsApp, dan email untuk informasi produk dan kerja sama.",
+  alternates: { canonical: "/contact" },
 };
+
+/** ISR 5 menit: info kontak dari `site_settings.contact`. */
+export const revalidate = 300;
 
 /** Halaman Contact Us: info kontak dari `site_settings.contact` + formulir. */
 export default async function ContactPage() {

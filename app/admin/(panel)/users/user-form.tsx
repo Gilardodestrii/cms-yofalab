@@ -74,7 +74,7 @@ export function UserForm({
             name="isActive"
             type="checkbox"
             defaultChecked={initial ? initial.isActive : true}
-            className="h-4 w-4 rounded-sm border-line text-brand-500 focus:ring-brand-500"
+            className="h-4 w-4 rounded-sm border-line text-brand-600 focus:ring-brand-500"
           />
           Aktif (dapat login)
         </label>

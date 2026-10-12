@@ -230,14 +230,14 @@ export function ProductForm({
         ) : (
           <ul className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
             {images.map((m) => (
-              <li key={m.id} className={`flex flex-col overflow-hidden rounded-sm border ${primaryId === m.id || (primaryId === "" && images[0]?.id === m.id) ? "border-brand-500" : "border-line"}`}>
+              <li key={m.id} className={`flex flex-col overflow-hidden rounded-sm border ${primaryId === m.id || (primaryId === "" && images[0]?.id === m.id) ? "border-brand-600" : "border-line"}`}>
                 <span className="flex aspect-square items-center justify-center bg-surface-muted">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   {m.path ? <img src={m.path} alt={m.fileName} className="h-full w-full object-cover" /> : <span className="font-body text-xs text-ink-400">{m.fileName}</span>}
                 </span>
                 <span className="truncate px-2 py-1 font-body text-xs text-ink-600">{m.fileName}</span>
                 <span className="flex gap-1 px-2 pb-2">
-                  <button type="button" className="font-body text-xs text-brand-500 hover:underline" onClick={() => setPrimaryId(m.id)}>
+                  <button type="button" className="font-body text-xs text-brand-600 hover:underline" onClick={() => setPrimaryId(m.id)}>
                     {primaryId === m.id || (primaryId === "" && images[0]?.id === m.id) ? "★ Utama" : "Jadikan utama"}
                   </button>
                   <button type="button" aria-label={`Hapus gambar ${m.fileName}`} className="font-body text-xs text-danger hover:underline" onClick={() => removeImage(m.id)}>

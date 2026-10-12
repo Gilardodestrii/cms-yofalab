@@ -129,7 +129,7 @@ export function DataTable<T>({
                     <button
                       type="button"
                       onClick={() => toggleSort(col.key)}
-                      className="inline-flex items-center gap-1 uppercase hover:text-brand-500"
+                      className="inline-flex items-center gap-1 uppercase hover:text-brand-600"
                       aria-label={`Urutkan berdasarkan ${col.header}`}
                     >
                       {col.header}

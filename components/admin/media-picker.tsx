@@ -92,7 +92,7 @@ export function MediaPicker({ open, onClose, onSelect }: MediaPickerProps) {
                   onSelect(m);
                   onClose();
                 }}
-                className="group flex flex-col overflow-hidden rounded-sm border border-line text-left hover:border-brand-500"
+                className="group flex flex-col overflow-hidden rounded-sm border border-line text-left hover:border-brand-600"
               >
                 <span className="flex aspect-square items-center justify-center bg-surface-muted">
                   {/* eslint-disable-next-line @next/next/no-img-element */}

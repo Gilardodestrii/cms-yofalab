@@ -3,7 +3,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { env } from "@/lib/env";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { getClientIp, hashIp } from "@/lib/request";
+import { getClientIp, hashIp, isSameOrigin } from "@/lib/request";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { commentSchema } from "@/lib/validators/public";
 
@@ -21,6 +21,10 @@ function normalizeWebsite(raw: string): string | null {
  * Rate limit: 5/jam per IP.
  */
 export async function POST(request: Request) {
+  if (!isSameOrigin(request)) {
+    return NextResponse.json({ error: "Permintaan lintas situs ditolak." }, { status: 403 });
+  }
+
   let body: unknown;
   try {
     body = await request.json();

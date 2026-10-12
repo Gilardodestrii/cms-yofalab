@@ -11,7 +11,11 @@ export const metadata: Metadata = {
   title: "Product",
   description:
     "Katalog produk alat kesehatan YOFALAB Indonesia: Blood Grouping Reagent, Vacuum Blood Collection, dan Hemoglobin Meter.",
+  alternates: { canonical: "/product" },
 };
+
+/** ISR 5 menit: katalog ikut berubah tanpa rebuild penuh. */
+export const revalidate = 300;
 
 const PER_PAGE = 12;
 
@@ -98,8 +102,8 @@ export default async function ProductPage({
             href="/product"
             aria-current={!activeCategory ? "page" : undefined}
             className={!activeCategory
-              ? "rounded-full bg-brand-500 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
-              : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-500 hover:text-brand-600"}
+              ? "rounded-full bg-brand-600 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
+              : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-600 hover:text-brand-600"}
           >
             Semua
           </Link>
@@ -109,8 +113,8 @@ export default async function ProductPage({
               href={`/product?kategori=${c.slug}`}
               aria-current={activeCategory?.id === c.id ? "page" : undefined}
               className={activeCategory?.id === c.id
-                ? "rounded-full bg-brand-500 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
-                : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-500 hover:text-brand-600"}
+                ? "rounded-full bg-brand-600 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
+                : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-600 hover:text-brand-600"}
             >
               {c.name}
             </Link>

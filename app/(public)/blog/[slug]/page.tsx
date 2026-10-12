@@ -5,6 +5,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { PostCard } from "@/components/ui/post-card";
 import { CommentForm } from "@/components/ui/comment-form";
+import { siteConfig } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -48,6 +49,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: post.seoTitle ?? post.title,
     description: post.seoDescription ?? post.excerpt ?? undefined,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       title: post.seoTitle ?? post.title,
       description: post.seoDescription ?? post.excerpt ?? undefined,
@@ -66,10 +68,12 @@ export default async function BlogDetailPage({ params }: Props) {
       where: { slug, status: "PUBLISHED", publishedAt: { lte: new Date() } },
       select: {
         id: true,
+        slug: true,
         title: true,
         content: true,
         excerpt: true,
         publishedAt: true,
+        updatedAt: true,
         seoTitle: true,
         seoDescription: true,
         author: { select: { name: true } },
@@ -212,9 +216,15 @@ export default async function BlogDetailPage({ params }: Props) {
             "@type": "BlogPosting",
             headline: post.title,
             datePublished: post.publishedAt?.toISOString(),
+            dateModified: post.updatedAt.toISOString(),
             author: { "@type": "Person", name: post.author.name },
             image: post.cover?.path,
             description: post.seoDescription ?? post.excerpt ?? undefined,
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": `${siteConfig.url}/blog/${post.slug}`,
+            },
+            publisher: { "@id": `${siteConfig.url}/#organization` },
           }),
         }}
       />
