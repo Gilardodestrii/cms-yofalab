@@ -46,6 +46,19 @@ async function main() {
           "Copyright \u00a9 2026 YOFALAB Indonesia. All rights reserved.",
       },
     },
+    {
+      key: "site",
+      value: {
+        name: "YOFALAB Indonesia",
+        tagline:
+          "Company profile dan katalog produk alat kesehatan YOFALAB Indonesia.",
+        seoTitle: "YOFALAB Indonesia — Alat Kesehatan & Reagen Laboratorium",
+        seoDescription:
+          "YOFALAB Indonesia menyediakan blood grouping reagent, vacuum blood collection, dan hemoglobin meter berkualitas untuk laboratorium.",
+        notifyEmail: "",
+      },
+    },
+    { key: "upload", value: { maxUploadMb: 5 } },
   ];
 
   for (const s of settings) {

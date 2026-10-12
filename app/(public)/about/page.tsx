@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { db } from "@/lib/db";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
+import { getAboutPageContent } from "@/lib/pages";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -8,37 +8,15 @@ export const metadata: Metadata = {
     "Profil YOFALAB Indonesia: visi, misi, dan riset pengembangan di bidang alat kesehatan.",
 };
 
-/** Bentuk konten `pages.ABOUT` (semua opsional agar aman saat belum diisi). */
-type AboutContent = {
-  profile?: string;
-  vision?: string;
-  mission?: string[] | string;
-  rnd?: string;
-};
-
 /** Halaman About Us: profil, Vision, Mission, R&D dari `pages.ABOUT`. */
 export default async function AboutPage() {
-  let content: AboutContent | null = null;
-  try {
-    const page = await db.page.findUnique({
-      where: { key: "ABOUT" },
-      select: { content: true },
-    });
-    content = (page?.content as AboutContent | null) ?? null;
-  } catch {
-    // Database belum siap (mis. saat build).
-  }
-
-  const missions = Array.isArray(content?.mission)
-    ? content!.mission
-    : content?.mission
-      ? [content.mission]
-      : [];
+  const content = await getAboutPageContent();
+  const missions = content.mission;
 
   const blocks: { title: string; body?: string; list?: string[] }[] = [
-    { title: "Vision", body: content?.vision },
+    { title: "Vision", body: content.vision },
     { title: "Mission", list: missions },
-    { title: "Research & Development", body: content?.rnd },
+    { title: "Research & Development", body: content.rnd },
   ];
 
   return (
@@ -55,7 +33,7 @@ export default async function AboutPage() {
       <section className="container-site py-10 md:py-14">
         <h2 className="font-heading text-2xl font-semibold text-ink-900">Tentang YOFALAB</h2>
         <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
-          {content?.profile ??
+          {content.profile ||
             "Profil perusahaan belum diisi. Konten About Us dikelola dari panel admin (/admin/pages)."}
         </p>
 

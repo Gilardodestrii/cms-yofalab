@@ -4,6 +4,7 @@ import { db } from "@/lib/db";
 import { ButtonLink } from "@/components/ui/button";
 import { CategoryLabel } from "@/components/ui/category-label";
 import { SearchInput } from "@/components/ui/search-input";
+import { getHomePageContent } from "@/lib/pages";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -11,24 +12,9 @@ export const metadata: Metadata = {
     "YOFALAB Indonesia - penyedia alat kesehatan dan reagen laboratorium terpercaya sejak 2015.",
 };
 
-const ADVANTAGES = [
-  {
-    title: "High Quality",
-    body: "Produk alat kesehatan dan reagen dengan standar mutu terjamin untuk hasil laboratorium yang akurat.",
-  },
-  {
-    title: "Comprehensive Support",
-    body: "Dukungan purna jual menyeluruh: instalasi, kalibrasi, dan layanan teknis responsif.",
-  },
-  {
-    title: "Expert Training",
-    body: "Pelatihan penggunaan alat oleh tim ahli agar staf laboratorium siap pakai sejak hari pertama.",
-  },
-];
-
 /**
- * Home publik Sprint 4: hero, 3 statistik, Get to Know, 3 keunggulan,
- * carousel kategori produk, pencarian blog, 3 blog terbaru.
+ * Home publik: hero + slide, statistik, Get to Know, keunggulan (dari
+ * `pages.HOME`), carousel kategori produk, pencarian blog, 3 blog terbaru.
  */
 export default async function HomePage() {
   let categories: {
@@ -45,6 +31,7 @@ export default async function HomePage() {
     publishedAt: Date | null;
     cover: { path: string; fileName: string; altText: string | null } | null;
   }[] = [];
+  const content = await getHomePageContent();
   try {
     [categories, productCount, latestPosts] = await Promise.all([
       db.productCategory.findMany({
@@ -59,7 +46,7 @@ export default async function HomePage() {
       }),
       db.product.count({ where: { status: "PUBLISHED" } }),
       db.post.findMany({
-        where: { status: "PUBLISHED" },
+        where: { status: "PUBLISHED", publishedAt: { lte: new Date() } },
         orderBy: [{ publishedAt: "desc" }, { id: "desc" }],
         take: 3,
         select: {
@@ -75,6 +62,13 @@ export default async function HomePage() {
     // Database belum siap (mis. saat build): tampilkan kerangka tanpa data.
   }
 
+  // Statistik: nilai "Products" dihitung otomatis dari jumlah produk terbit.
+  const stats = content.stats.map((s) =>
+    s.label.toLowerCase() === "products" ? { ...s, value: `${productCount}+` } : s,
+  );
+
+  const slides = content.slides.filter((s) => s.imagePath);
+
   return (
     <div>
       {/* Hero */}
@@ -82,11 +76,10 @@ export default async function HomePage() {
         <div className="container-site py-16 md:py-24">
           <CategoryLabel>YOFALAB Indonesia</CategoryLabel>
           <h1 className="mt-2 max-w-reading text-4xl font-bold md:text-5xl">
-            Alat Kesehatan dan Reagen Laboratorium Terpercaya
+            {content.heroTitle}
           </h1>
           <p className="mt-4 max-w-reading font-body text-base text-ink-600">
-            Melayani laboratorium, klinik, rumah sakit, dan distributor sejak
-            2015 dengan produk berkualitas dan dukungan ahli.
+            {content.heroSubtitle}
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <ButtonLink href="/contact" variant="hero">
@@ -99,14 +92,35 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 3 statistik */}
+      {/* Slide hero tambahan (dikelola dari /admin/pages) */}
+      {slides.length > 0 && (
+        <section className="container-site py-8">
+          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {slides.map((s, i) => (
+              <li key={`${s.imagePath}-${i}`} className="overflow-hidden rounded-md bg-surface shadow-card">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={s.imagePath}
+                  alt={s.title || `Slide ${i + 1}`}
+                  loading="lazy"
+                  className="aspect-[16/9] w-full object-cover"
+                />
+                {(s.title || s.subtitle) && (
+                  <div className="p-4">
+                    {s.title && <p className="font-heading text-sm font-semibold text-ink-900">{s.title}</p>}
+                    {s.subtitle && <p className="mt-1 font-body text-xs text-ink-600">{s.subtitle}</p>}
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Statistik */}
       <section className="container-site py-10">
         <dl className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-          {[
-            { value: "2015", label: "Established" },
-            { value: `${productCount}+`, label: "Products" },
-            { value: "20+", label: "Partners" },
-          ].map((s) => (
+          {stats.map((s) => (
             <div key={s.label} className="panel-card p-6">
               <dt className="order-2 mt-1 font-body text-sm text-ink-600">{s.label}</dt>
               <dd className="font-heading text-3xl font-bold text-brand-600">{s.value}</dd>
@@ -119,21 +133,20 @@ export default async function HomePage() {
       <section className="container-site py-10">
         <CategoryLabel>Get to Know YOFALAB</CategoryLabel>
         <h2 className="mt-2 font-heading text-2xl font-semibold text-ink-900 md:text-3xl">
-          Mitra laboratorium Anda sejak 2015
+          {content.getToKnowTitle}
         </h2>
-        <p className="mt-4 max-w-reading font-body text-base text-ink-600">
-          YOFALAB Indonesia menyediakan alat kesehatan, reagen, dan layanan
-          pelatihan untuk laboratorium di seluruh Indonesia.{" "}
+        <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
+          {content.getToKnowBody}{" "}
           <Link href="/about" className="font-semibold text-brand-500 hover:text-brand-600">
             Pelajari lebih lanjut →
           </Link>
         </p>
       </section>
 
-      {/* 3 keunggulan */}
+      {/* Keunggulan */}
       <section className="bg-brand-50">
         <div className="container-site grid gap-6 py-12 sm:grid-cols-3">
-          {ADVANTAGES.map((a) => (
+          {content.advantages.map((a) => (
             <article key={a.title} className="rounded-md bg-surface p-6 shadow-card">
               <h3 className="font-heading text-lg font-semibold text-ink-900">{a.title}</h3>
               <p className="mt-2 font-body text-sm text-ink-600">{a.body}</p>

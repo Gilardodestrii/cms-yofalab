@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { ProductCard } from "@/components/ui/product-card";
 import { Tabs } from "@/components/ui/tabs";
+import { getContactSetting, whatsappLink } from "@/lib/settings";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -63,6 +64,8 @@ export default async function ProductDetailPage({ params }: Props) {
     },
   });
   if (!product) notFound();
+
+  const waLink = whatsappLink((await getContactSetting()).whatsapp);
 
   // Terkait manual bila ada, bila kosong otomatis dari kategori sama.
   const manual = product.relatedFrom
@@ -154,6 +157,11 @@ export default async function ProductDetailPage({ params }: Props) {
                 Download Brosur
               </a>
             )}
+            {waLink ? (
+              <a href={waLink} target="_blank" rel="noopener noreferrer" className="btn-outline">
+                WhatsApp
+              </a>
+            ) : null}
             <Link href="/contact" className="btn-primary h-12 px-6 text-base">
               Contact Us
             </Link>

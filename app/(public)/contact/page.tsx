@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { db } from "@/lib/db";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { ContactForm } from "@/components/ui/contact-form";
+import { getContactSetting, whatsappLink } from "@/lib/settings";
 
 export const metadata: Metadata = {
   title: "Contact Us",
@@ -9,31 +9,15 @@ export const metadata: Metadata = {
     "Hubungi YOFALAB Indonesia: alamat, telepon, WhatsApp, dan email untuk informasi produk dan kerja sama.",
 };
 
-type ContactInfo = {
-  address?: string;
-  phone?: string;
-  whatsapp?: string;
-  email?: string;
-};
-
 /** Halaman Contact Us: info kontak dari `site_settings.contact` + formulir. */
 export default async function ContactPage() {
-  let info: ContactInfo = {};
-  try {
-    const setting = await db.siteSetting.findUnique({
-      where: { key: "contact" },
-      select: { value: true },
-    });
-    info = (setting?.value as ContactInfo | null) ?? {};
-  } catch {
-    // Database belum siap (mis. saat build).
-  }
+  const info = await getContactSetting();
 
-  const waNumber = info.whatsapp?.replace(/[^0-9]/g, "") ?? "";
+  const waNumber = whatsappLink(info.whatsapp);
   const rows: { label: string; value?: string; href?: string }[] = [
     { label: "Alamat", value: info.address },
     { label: "Telepon", value: info.phone, href: info.phone ? `tel:${info.phone.replace(/[^0-9+]/g, "")}` : undefined },
-    { label: "WhatsApp", value: info.whatsapp, href: waNumber ? `https://wa.me/${waNumber}` : undefined },
+    { label: "WhatsApp", value: info.whatsapp, href: waNumber || undefined },
     { label: "Email", value: info.email, href: info.email ? `mailto:${info.email}` : undefined },
   ];
 

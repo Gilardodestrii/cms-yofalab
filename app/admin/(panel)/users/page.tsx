@@ -1,93 +1,125 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { requireRole } from "@/lib/auth/guards";
 import { Breadcrumb } from "@/components/admin/breadcrumb";
+import { DataTable, type Column } from "@/components/admin/data-table";
+import { Badge } from "@/components/ui/badge";
 import { db } from "@/lib/db";
+import { parsePagination } from "@/lib/pagination";
 import { roleLabels } from "@/lib/auth/roles";
+import { UserRowActions } from "./row-actions";
 
 export const metadata: Metadata = {
   title: "Pengguna",
   robots: { index: false, follow: false },
 };
 
-/**
- * Halaman Pengguna (`/admin/users`). Hanya SUPER_ADMIN.
- * CRUD penuh dijadwalkan Sprint 7; Sprint 2 menegakkan RBAC + daftar baca.
- */
-export default async function AdminUsersPage() {
+type UserRow = {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  isActive: boolean;
+  lastLoginAt: string;
+};
+
+const columns: Column<UserRow>[] = [
+  { key: "name", header: "Nama", sortable: true, render: (r) => r.name },
+  { key: "email", header: "Email", sortable: true, render: (r) => r.email },
+  { key: "role", header: "Peran", render: (r) => roleLabels[r.role as keyof typeof roleLabels] ?? r.role },
+  {
+    key: "isActive",
+    header: "Status",
+    render: (r) => <Badge variant={r.isActive ? "success" : "danger"}>{r.isActive ? "Aktif" : "Nonaktif"}</Badge>,
+  },
+  { key: "lastLoginAt", header: "Login terakhir", sortable: true, render: (r) => r.lastLoginAt },
+  {
+    key: "actions",
+    header: "Aksi",
+    render: (r) => (
+      <span className="flex gap-2">
+        <Link href={`/admin/users/${r.id}/edit`} className="btn-admin-secondary h-8 px-3 text-xs">
+          Ubah
+        </Link>
+        <UserRowActions id={r.id} name={r.name} />
+      </span>
+    ),
+  },
+];
+
+function formatDateTime(d: Date | null): string {
+  if (!d) return "—";
+  return new Intl.DateTimeFormat("id-ID", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(d);
+}
+
+/** Manajemen pengguna (`/admin/users`). Hanya SUPER_ADMIN. */
+export default async function AdminUsersPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   await requireRole(["SUPER_ADMIN"], "/admin/users");
 
-  const users = await db.user.findMany({
-    orderBy: { createdAt: "desc" },
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      isActive: true,
-      lastLoginAt: true,
-    },
+  const params = await searchParams;
+  const { page, perPage, skip, take, search, sort, order } = parsePagination(params, {
+    defaultSort: "createdAt",
+    allowedSort: ["name", "email", "lastLoginAt", "createdAt"],
   });
+
+  const where = search
+    ? { OR: [{ name: { contains: search } }, { email: { contains: search } }] }
+    : {};
+
+  const [items, total] = await Promise.all([
+    db.user.findMany({
+      where,
+      orderBy: [{ [sort]: order }, { id: order }],
+      skip,
+      take,
+      select: { id: true, name: true, email: true, role: true, isActive: true, lastLoginAt: true },
+    }),
+    db.user.count({ where }),
+  ]);
+
+  const rows: UserRow[] = items.map((u) => ({
+    id: u.id.toString(),
+    name: u.name,
+    email: u.email,
+    role: u.role,
+    isActive: u.isActive,
+    lastLoginAt: formatDateTime(u.lastLoginAt),
+  }));
 
   return (
     <div className="flex flex-col gap-6">
-      <Breadcrumb
-        items={[{ label: "Dashboard", href: "/admin" }, { label: "Pengguna" }]}
-      />
-      <div className="panel-card overflow-hidden">
-        <div className="border-b border-line p-4">
-          <h1 className="font-heading text-lg font-semibold text-ink-900">
-            Pengguna Admin
-          </h1>
-          <p className="mt-1 font-body text-sm text-ink-600">
-            Total {users.length} pengguna. Manajemen pengguna lengkap tersedia
-            pada Sprint 7.
-          </p>
+      <Breadcrumb items={[{ label: "Dashboard", href: "/admin" }, { label: "Pengguna" }]} />
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-lg font-semibold text-ink-900">Pengguna</h1>
+          <p className="mt-1 font-body text-sm text-ink-600">{total} akun admin.</p>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse text-left">
-            <thead>
-              <tr className="bg-brand-50">
-                <th className="label-caps px-4 py-3" scope="col">
-                  Nama
-                </th>
-                <th className="label-caps px-4 py-3" scope="col">
-                  Email
-                </th>
-                <th className="label-caps px-4 py-3" scope="col">
-                  Peran
-                </th>
-                <th className="label-caps px-4 py-3" scope="col">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {users.map((user) => (
-                <tr key={user.id.toString()} className="border-b border-line">
-                  <td className="px-4 py-3 font-body text-sm text-ink-900">
-                    {user.name}
-                  </td>
-                  <td className="px-4 py-3 font-body text-sm text-ink-600">
-                    {user.email}
-                  </td>
-                  <td className="px-4 py-3 font-body text-sm text-ink-600">
-                    {roleLabels[user.role]}
-                  </td>
-                  <td className="px-4 py-3 font-body text-sm">
-                    <span
-                      className={
-                        user.isActive ? "text-success" : "text-ink-400"
-                      }
-                    >
-                      {user.isActive ? "Aktif" : "Nonaktif"}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Link href="/admin/users/new" className="btn-admin">
+          Tambah pengguna
+        </Link>
       </div>
+      <DataTable
+        columns={columns}
+        rows={rows}
+        total={total}
+        page={page}
+        perPage={perPage}
+        sort={sort}
+        order={order}
+        searchValue={search}
+        searchPlaceholder="Cari nama atau email…"
+        emptyState="Belum ada pengguna."
+      />
     </div>
   );
 }

@@ -1,9 +1,11 @@
 import nodemailer from "nodemailer";
 import { env } from "./env";
+import { getSiteSetting } from "./settings";
 
-/** Apakah kredensial SMTP terkonfigurasi (bila tidak, email dilewati + dicatat). */
-export function isMailConfigured(): boolean {
-  return Boolean(env.SMTP_HOST && env.MAIL_FROM && env.MAIL_TO);
+/** Email penerima notifikasi: dari pengaturan admin, fallback ke env `MAIL_TO`. */
+async function resolveRecipient(): Promise<string> {
+  const site = await getSiteSetting();
+  return site.notifyEmail || env.MAIL_TO;
 }
 
 type SendResult = { ok: true } | { ok: false; error: string };
@@ -19,8 +21,9 @@ export async function sendContactNotification(input: {
   message: string;
   id: string;
 }): Promise<SendResult> {
-  if (!isMailConfigured()) {
-    console.warn("[mail] SMTP belum dikonfigurasi — lewati kirim notifikasi kontak.");
+  const recipient = await resolveRecipient();
+  if (!env.SMTP_HOST || !env.MAIL_FROM || !recipient) {
+    console.warn("[mail] SMTP/penerima belum dikonfigurasi — lewati kirim notifikasi kontak.");
     return { ok: false, error: "SMTP belum dikonfigurasi." };
   }
 
@@ -33,7 +36,7 @@ export async function sendContactNotification(input: {
 
   const mail = {
     from: env.MAIL_FROM,
-    to: env.MAIL_TO,
+    to: recipient,
     subject: `[Kontak YOFALAB #${input.id}] ${input.subject || "(tanpa subjek)"}`,
     text: `Pesan kontak baru dari ${input.name} <${input.email}>:\n\n${input.message}`,
     replyTo: input.email,
