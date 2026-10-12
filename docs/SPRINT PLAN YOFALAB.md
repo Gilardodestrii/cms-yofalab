@@ -117,15 +117,15 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** tim dapat mengelola katalog lengkap dari admin.
 
 **Task**
-- [ ] Modul Kategori Produk `/admin/categories`: CRUD, slug otomatis, gambar slider (media picker), urutan, konfirmasi hapus.
-- [ ] Modul Produk `/admin/products`: CRUD lengkap — nama, slug otomatis (unik), kategori, deskripsi singkat, status (Draft/Published/Arsip), urutan, SEO (title + description).
-- [ ] Galeri gambar: gambar utama + tambahan, atur urutan, tandai `is_primary`.
-- [ ] Editor daftar poin untuk `specifications` (`[{label, value}]`) dan `applications` (`[]`) — simpan sebagai JSON.
-- [ ] Tag: buat/pilih tag, relasi `product_tags`.
-- [ ] Brosur PDF: unggah via media picker.
-- [ ] Produk terkait: otomatis dari kategori sama, bisa diganti manual (`product_related`).
-- [ ] Soft delete untuk data yang direferensikan; hard delete hanya bila aman.
-- [ ] Revalidasi cache (`revalidateTag`) saat produk/kategori berubah.
+- [x] Modul Kategori Produk `/admin/categories`: CRUD, slug otomatis, gambar slider (media picker), urutan, konfirmasi hapus.
+- [x] Modul Produk `/admin/products`: CRUD lengkap — nama, slug otomatis (unik), kategori, deskripsi singkat, status (Draft/Published/Arsip), urutan, SEO (title + description).
+- [x] Galeri gambar: gambar utama + tambahan, atur urutan, tandai `is_primary`.
+- [x] Editor daftar poin untuk `specifications` (`[{label, value}]`) dan `applications` (`[]`) — simpan sebagai JSON.
+- [x] Tag: buat/pilih tag, relasi `product_tags`.
+- [x] Brosur PDF: unggah via media picker.
+- [x] Produk terkait: otomatis dari kategori sama, bisa diganti manual (`product_related`).
+- [x] Soft delete untuk data yang direferensikan; hard delete hanya bila aman.
+- [x] Revalidasi cache saat produk/kategori berubah (pakai `revalidatePath`; `revalidateTag` belum dipakai karena belum ada cache tag).
 
 **Acceptance criteria**
 - Admin dapat menerbitkan 1 produk baru dalam <= 5 menit (diuji dengan stopwatch).
