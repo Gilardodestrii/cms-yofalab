@@ -181,14 +181,14 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** halaman publik konten dan interaksi pengunjung selesai.
 
 **Task**
-- [ ] `/blog`: daftar artikel, filter kategori, pencarian, paginasi.
-- [ ] `/blog/[slug]`: konten, info penulis + tanggal, artikel terkait, formulir komentar.
-- [ ] `/about`: profil, Vision, Mission, R&D (dari `pages.ABOUT`).
-- [ ] `/contact`: info kontak (alamat, telepon, WhatsApp, email) + formulir (nama, email, subjek, pesan) via Route Handler + Zod.
-- [ ] Formulir komentar dan kontak: honeypot + rate limit + validasi server + hash IP.
-- [ ] Simpan pesan ke `contact_messages`; komentar masuk sebagai `PENDING`.
-- [ ] Notifikasi email untuk pesan kontak baru (Nodemailer).
-- [ ] Moderasi komentar `/admin/comments`: setujui, tolak, tandai spam, hapus.
+- [x] `/blog`: daftar artikel, filter kategori, pencarian, paginasi.
+- [x] `/blog/[slug]`: konten, info penulis + tanggal, artikel terkait, formulir komentar.
+- [x] `/about`: profil, Vision, Mission, R&D (dari `pages.ABOUT`).
+- [x] `/contact`: info kontak (alamat, telepon, WhatsApp, email) + formulir (nama, email, subjek, pesan) via Route Handler + Zod.
+- [x] Formulir komentar dan kontak: honeypot + rate limit + validasi server + hash IP.
+- [x] Simpan pesan ke `contact_messages`; komentar masuk sebagai `PENDING`.
+- [x] Notifikasi email untuk pesan kontak baru (Nodemailer, best-effort + dicatat bila gagal).
+- [x] Moderasi komentar `/admin/comments`: setujui, tolak, tandai spam, hapus.
 
 **Acceptance criteria**
 - Pesan kontak tersimpan 100% dan email terkirim (dicek log/uji terima).
