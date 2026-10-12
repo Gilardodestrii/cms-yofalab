@@ -65,7 +65,8 @@ function isSafeUrl(tag: string, url: string): boolean {
  */
 function sanitizeTag(token: string): string {
   const match = /^<\/?([a-zA-Z][a-zA-Z0-9]*)\b([^>]*)>?\s*$/.exec(token);
-  if (!match) return "";
+  // Bukan tag valid (mis. teks "a < b") → perlakukan sebagai teks, jangan dibuang.
+  if (!match) return escapeText(token);
   const [, rawName, rawAttrs] = match;
   const name = rawName.toLowerCase();
 

@@ -108,6 +108,7 @@ export function PostForm({
         <input type="hidden" id="coverMediaId" name="coverMediaId" value={cover?.id ?? ""} />
         <div className="flex items-center gap-3">
           {cover?.path ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={cover.path} alt={cover.fileName} className="h-16 w-24 rounded-sm border border-line object-cover" />
           ) : (
             <span className="font-body text-sm text-ink-600">{cover ? cover.fileName : "Belum ada gambar."}</span>

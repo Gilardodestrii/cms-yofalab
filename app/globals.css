@@ -47,6 +47,44 @@
     @apply mx-auto w-full max-w-reading;
   }
 
+  /* Tipografi konten artikel/kutipan (dipakai editor Tiptap + halaman publik). */
+  .prose-yofa {
+    @apply leading-relaxed;
+  }
+  .prose-yofa h2 {
+    @apply mt-8 mb-3 font-heading text-2xl font-semibold text-ink-900;
+  }
+  .prose-yofa h3 {
+    @apply mt-6 mb-2 font-heading text-xl font-semibold text-ink-900;
+  }
+  .prose-yofa p {
+    @apply my-3;
+  }
+  .prose-yofa ul {
+    @apply my-3 list-disc pl-6;
+  }
+  .prose-yofa ol {
+    @apply my-3 list-decimal pl-6;
+  }
+  .prose-yofa li {
+    @apply my-1;
+  }
+  .prose-yofa a {
+    @apply text-brand-600 underline hover:text-brand-700;
+  }
+  .prose-yofa img {
+    @apply my-4 h-auto max-w-full rounded-sm;
+  }
+  .prose-yofa blockquote {
+    @apply my-4 border-l-4 border-brand-300 pl-4 italic text-ink-600;
+  }
+  .prose-yofa pre {
+    @apply my-4 overflow-x-auto rounded-sm bg-surface-muted p-4 font-mono text-sm;
+  }
+  .prose-yofa code {
+    @apply rounded-sm bg-surface-muted px-1 py-0.5 font-mono text-sm;
+  }
+
   /* Tombol utama: latar brand-500, teks putih, tinggi 40 px. */
   .btn-primary {
     @apply inline-flex h-10 items-center justify-center rounded-sm bg-brand-500 px-5 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
