@@ -65,16 +65,16 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** proyek Next.js berjalan, terhubung MySQL lewat Prisma, desain token siap dipakai.
 
 **Task**
-- [ ] Inisialisasi Next.js (App Router) + TypeScript + ESLint + Prettier.
-- [ ] Setup Tailwind CSS dan impor seluruh token dari Design System (`tailwind.config.ts` lengkap: colors, fontFamily, borderRadius, boxShadow, screens).
-- [ ] Impor font Poppins (judul) dan Nunito (isi) via `next/font`.
-- [ ] Setup shadcn/ui dan komponen dasar (Button, Input, Table, Dialog, Badge, Toast).
-- [ ] Setup Prisma + MySQL, tulis `schema.prisma` **selaras 1:1 dengan `docs/schema.sql`** (15 tabel).
-- [ ] Jalankan migrasi awal; verifikasi dengan `schema.sql` (FK, indeks, FULLTEXT `ft_posts`).
-- [ ] Buat `lib/db.ts` (Prisma singleton) dan `lib/env.ts` (validasi env dengan Zod).
-- [ ] Buat layout dasar publik (Header, Footer, container 1230 px, max-width baca 720 px).
+- [x] Inisialisasi Next.js (App Router) + TypeScript + ESLint + Prettier.
+- [x] Setup Tailwind CSS dan impor seluruh token dari Design System (`tailwind.config.ts` lengkap: colors, fontFamily, borderRadius, boxShadow, screens).
+- [x] Impor font Poppins (judul) dan Nunito (isi) via `next/font`.
+- [ ] Setup shadcn/ui dan komponen dasar (Button, Input, Table, Dialog, Badge, Toast). Komponen custom setara ada (Button, DataTable, ConfirmDialog, Toast, FormField) tapi tanpa shadcn/ui + tanpa Badge.
+- [x] Setup Prisma + MySQL, tulis `schema.prisma` **selaras 1:1 dengan `docs/schema.sql`** (15 tabel).
+- [x] Jalankan migrasi awal; verifikasi dengan `schema.sql` (FK, indeks, FULLTEXT `ft_posts`).
+- [x] Buat `lib/db.ts` (Prisma singleton) dan `lib/env.ts` (validasi env dengan Zod).
+- [x] Buat layout dasar publik (Header, Footer, container 1230 px, max-width baca 720 px).
 - [ ] Halaman placeholder 7 rute publik agar navigasi bisa diuji.
-- [ ] Setup CI: lint + `tsc --noEmit` + build pada setiap PR.
+- [x] Setup CI: lint + `tsc --noEmit` + build pada setiap PR.
 
 **Acceptance criteria**
 - `npm run dev` dan `npm run build` sukses.
