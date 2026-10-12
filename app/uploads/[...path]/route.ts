@@ -51,13 +51,28 @@ export async function GET(
       return new NextResponse("Not found", { status: 404 });
     }
     const data = await readFile(normalized);
-    return new NextResponse(new Uint8Array(data), {
-      headers: {
-        "Content-Type": mime,
-        "Content-Length": String(info.size),
-        "Cache-Control": "public, max-age=31536000, immutable",
-      },
-    });
+
+    // SVG bisa memuat <script> dan event handler. Bila disajikan inline,
+    // browser mengeksekusinya di origin situs ini (stored XSS) — siapa pun
+    // yang boleh mengunggah SVG (semua Editor) bisa menyerang sesi admin lain.
+    // Dua lapis pertahanan:
+    //   1. `Content-Disposition: attachment` → tidak dirender inline.
+    //   2. CSP ketat `sandbox` + `default-src 'none'` pada respons ini agar
+    //      tetap aman walau dibuka langsung.
+    const isSvg = ext === ".svg";
+    const headers: Record<string, string> = {
+      "Content-Type": mime,
+      "Content-Length": String(info.size),
+      "X-Content-Type-Options": "nosniff",
+      "Cache-Control": "public, max-age=31536000, immutable",
+    };
+    if (isSvg) {
+      headers["Content-Disposition"] = 'attachment; filename="gambar.svg"';
+      headers["Content-Security-Policy"] =
+        "default-src 'none'; style-src 'unsafe-inline'; sandbox";
+    }
+
+    return new NextResponse(new Uint8Array(data), { headers });
   } catch {
     return new NextResponse("Not found", { status: 404 });
   }

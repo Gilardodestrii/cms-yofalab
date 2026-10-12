@@ -14,7 +14,27 @@ const envSchema = z.object({
     .string()
     .url("NEXT_PUBLIC_SITE_URL harus berupa URL valid"),
   // Direktori penyimpanan berkas unggahan (relatif terhadap root proyek).
-  UPLOAD_DIR: z.string().optional().default("uploads"),
+  //
+  // SENGAJA di luar `public/`: berkas unggahan tidak boleh disajikan langsung
+  // oleh Next.js. Semua berkas dilayani lewat route handler
+  // `app/uploads/[...path]/route.ts` yang hanya mengizinkan ekstensi gambar/PDF
+  // diketahui dan menolak path traversal. Menaruhnya di `public/` akan membuat
+  // berkas apa pun (termasuk yang tak terduga) bisa diakses langsung lewat URL.
+  //
+  // Divalidasi agar tetap relatif dan tidak bisa keluar dari root proyek:
+  // nilai absolut membuat `path.join` membuang seluruh prefix sehingga berkas
+  // bisa ditulis ke mana saja (mis. `/etc/...`) — jalur penulisan berkas
+  // sembarang, bukan sekadar salah konfigurasi.
+  UPLOAD_DIR: z
+    .string()
+    .optional()
+    .default("uploads")
+    .refine((v) => !v.startsWith("/") && !/^[a-zA-Z]:/.test(v), {
+      message: "UPLOAD_DIR harus relatif (tidak boleh absolut)",
+    })
+    .refine((v) => !v.split(/[\\/]/).includes(".."), {
+      message: "UPLOAD_DIR tidak boleh mengandung '..'",
+    }),
   // Batas ukuran unggahan dalam byte (default 5 MB).
   MAX_UPLOAD_BYTES: z.coerce
     .number()

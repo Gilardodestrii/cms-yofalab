@@ -53,10 +53,39 @@ function escapeAttr(value: string): string {
     .replace(/>/g, "&gt;");
 }
 
+/**
+ * Cek URL aman untuk atribut `href`/`src`.
+ *
+ * Aturan penting: jalur relatif harus diawali TEPAT satu `/` diikuti karakter
+ * bukan-`/`. `//evil.com` dan `///evil.com` ditafsirkan browser sebagai
+ * protocol-relative URL (menjadi `https://evil.com`) sehingga harus ditolak —
+ * kalau tidak, tautan di artikel bisa mengarahkan pembaca ke situs penyerang.
+ * Jalur internal divalidasi sebagai URL relatif dan tidak perlu lolos cek ini.
+ */
 function isSafeUrl(tag: string, url: string): boolean {
-  const clean = url.trim();
-  if (tag === "img") return /^(https?:\/\/|\/uploads\/)/i.test(clean);
-  return /^(https?:\/\/|mailto:|\/)/i.test(clean);
+  // Buang karakter kontrol (tab/newline/NUL) agar tidak menyamarkan skema,
+  // dan samakan backslash menjadi slash: browser memperlakukan `\` sebagai
+  // `/` pada URL, sehingga `/\evil.com` menjadi `//evil.com` (protocol-relative).
+  const clean = url
+    .trim()
+    .replace(/[\u0000-\u001f\u007f]/g, "")
+    .replace(/\\/g, "/")
+    .trim();
+  if (!clean) return false;
+
+  // Tolak skema berbahaya eksplisit lebih dulu (javascript:, data:, vbscript:).
+  if (/^[a-z][a-z0-9+.-]*:/i.test(clean)) {
+    if (/^https?:\/\//i.test(clean)) return true;
+    if (tag !== "img" && /^mailto:/i.test(clean)) return true;
+    return false;
+  }
+
+  // Jalur absolut tunggal (bukan protocol-relative `//host`).
+  if (clean.startsWith("/") && !clean.startsWith("//")) {
+    return tag === "img" ? /^\/uploads\//i.test(clean) : true;
+  }
+
+  return false;
 }
 
 /**

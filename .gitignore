@@ -42,6 +42,7 @@ yarn-error.log*
 next-env.d.ts
 
 # uploads (media diunggah admin, disajikan lewat /uploads/[..path])
+# SENGAJA di luar public/: disajikan route handler app/uploads/[...path].
 /uploads/*
 !/uploads/.gitkeep
 

@@ -43,8 +43,7 @@ export type StoredFile = {
 };
 
 export type UploadResult =
-  | { ok: true; file: StoredFile }
-  | { ok: false; error: string };
+  { ok: true; file: StoredFile } | { ok: false; error: string };
 
 /** Nama berkas dasar yang aman (tanpa path, hanya alfanumerik dan dash). */
 function sanitizeBaseName(name: string): string {
@@ -85,7 +84,8 @@ export async function saveUpload(file: File): Promise<UploadResult> {
   if (!isAllowedMime(file.type)) {
     return {
       ok: false,
-      error: "Tipe berkas tidak diizinkan. Gunakan JPG, PNG, WEBP, GIF, SVG, atau PDF.",
+      error:
+        "Tipe berkas tidak diizinkan. Gunakan JPG, PNG, WEBP, GIF, SVG, atau PDF.",
     };
   }
   if (file.size <= 0) {
@@ -101,7 +101,11 @@ export async function saveUpload(file: File): Promise<UploadResult> {
   // Sub-folder per bulan agar folder tidak terlalu besar.
   const now = new Date();
   const relDir = path
-    .join(env.UPLOAD_DIR, `${now.getFullYear()}`, `${String(now.getMonth() + 1).padStart(2, "0")}`)
+    .join(
+      env.UPLOAD_DIR,
+      `${now.getFullYear()}`,
+      `${String(now.getMonth() + 1).padStart(2, "0")}`,
+    )
     .replace(/\\/g, "/");
 
   const ext = EXTENSION_BY_MIME[file.type] ?? "";
@@ -109,7 +113,20 @@ export async function saveUpload(file: File): Promise<UploadResult> {
   const unique = randomUUID().slice(0, 8);
   const fileName = `${base}-${unique}${ext}`;
 
-  const absDir = path.join(process.cwd(), relDir);
+  const absDir = path.resolve(process.cwd(), relDir);
+
+  // Pertahanan berlapis: pastikan folder tujuan tetap di dalam root proyek.
+  // `env.UPLOAD_DIR` sudah divalidasi, tetapi cek ini menutup jalur penulisan
+  // berkas di luar proyek (mis. `/etc/...`) bila suatu saat validasi env
+  // dilonggarkan atau nilai datang dari sumber lain.
+  const projectRoot = process.cwd();
+  if (absDir !== projectRoot && !absDir.startsWith(projectRoot + path.sep)) {
+    return {
+      ok: false,
+      error: "Folder unggahan tidak valid.",
+    };
+  }
+
   await mkdir(absDir, { recursive: true });
   await writeFile(path.join(absDir, fileName), buffer);
 

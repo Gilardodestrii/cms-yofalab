@@ -51,7 +51,35 @@ const nextConfig: NextConfig = {
     },
   },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      {
+        source: "/:path*",
+        headers: securityHeaders,
+      },
+      {
+        // Berkas unggahan memakai CSP ketat tersendiri.
+        //
+        // CSP global di atas longgar (`script-src 'unsafe-inline'`) demi skrip
+        // bootstrap Next.js — dan tanpa aturan ini CSP global itulah yang
+        // berlaku pada `/uploads/*`, sehingga SVG berisi skrip yang diunggah
+        // admin bisa dijalankan di origin situs. Hanya SATU header
+        // Content-Security-Policy yang dihormati browser, jadi CSP khusus ini
+        // harus ditulis di sini — bukan di route handler.
+        source: "/uploads/:path*",
+        headers: [
+          ...securityHeaders.filter((h) => h.key !== "Content-Security-Policy"),
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'none'",
+              "style-src 'unsafe-inline'",
+              "img-src data:",
+              "sandbox",
+            ].join("; "),
+          },
+        ],
+      },
+    ];
   },
 };
 
