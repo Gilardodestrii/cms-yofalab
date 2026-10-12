@@ -21,6 +21,11 @@
   },
   "dependencies": {
     "@prisma/client": "6.16.2",
+    "@tiptap/extension-image": "^3.31.4",
+    "@tiptap/extension-link": "^3.31.4",
+    "@tiptap/pm": "^3.31.4",
+    "@tiptap/react": "^3.31.4",
+    "@tiptap/starter-kit": "^3.31.4",
     "bcryptjs": "^3.0.3",
     "image-size": "^2.0.4",
     "next": "15.5.27",
