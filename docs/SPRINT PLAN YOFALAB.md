@@ -204,12 +204,12 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** seluruh konten saat ini dapat diedit dari admin (target PRD 100%).
 
 **Task**
-- [ ] `/admin/settings`: nama & logo, alamat, telepon, WhatsApp, email, tautan media sosial, teks footer, SEO default, email penerima notifikasi.
-- [ ] `/admin/pages`: editor blok Home (hero slides dengan gambar + tautan, statistik, tiga keunggulan, blok "Get to Know") dan About Us (profil, Vision, Mission, R&D).
-- [ ] `/admin/users`: CRUD akun, peran, aktif/nonaktif, reset kata sandi (khusus Super Admin).
-- [ ] `/admin/messages`: daftar, detail, ubah status (Baru/Dibaca/Ditindaklanjuti), catatan internal, filter + paginasi.
-- [ ] Ekspor pesan kontak ke CSV (hormati filter aktif).
-- [ ] Terapkan pengaturan ke Header/Footer/detail produk (email & WhatsApp langsung memakai nilai dari admin).
+- [x] `/admin/settings`: nama, tagline, SEO default, email penerima notifikasi, alamat, telepon, WhatsApp, email, tautan media sosial, teks footer, batas unggahan (logo memakai pustaka media).
+- [x] `/admin/pages`: editor blok Home (hero + gambar slide, statistik, Get to Know, tiga keunggulan) dan About Us (profil, Vision, Mission, R&D) — `lib/validators/pages.ts` mengunci skema Zod per tipe halaman.
+- [x] `/admin/users`: CRUD akun, peran, aktif/nonaktif, reset kata sandi (khusus Super Admin; jaga Super Admin aktif terakhir + tolak hapus pemilik artikel).
+- [x] `/admin/messages`: daftar, detail, ubah status (Baru/Dibaca/Ditindaklanjuti), catatan internal, filter + paginasi.
+- [x] Ekspor pesan kontak ke CSV (hormati filter aktif, UTF-8 BOM untuk Excel).
+- [x] Terapkan pengaturan ke Footer, `/contact`, dan detail produk (tombol WhatsApp + email memakai nilai dari admin); Home/About memakai `pages` dengan revalidasi.
 
 **Acceptance criteria**
 - Mengubah alamat/telepon/footer di admin langsung terlihat di situs publik setelah revalidasi.
