@@ -162,11 +162,11 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** tim dapat menulis dan menjadwalkan artikel.
 
 **Task**
-- [ ] Kategori blog di `/admin/posts`: CRUD sederhana (`post_categories`).
-- [ ] Modul Blog `/admin/posts`: CRUD artikel dengan Tiptap (heading, bold, italic, daftar, tautan, gambar, kutipan).
-- [ ] Field: judul, slug otomatis, kategori, penulis (default pengguna aktif), gambar utama, ringkasan (excerpt), tanggal terbit, penjadwalan, status Draft/Published, SEO.
-- [ ] Sanitasi HTML konten sebelum simpan/tampil (cegah XSS).
-- [ ] Revalidasi cache saat artikel diterbitkan/diubah.
+- [x] Kategori blog di `/admin/post-categories`: CRUD sederhana (`post_categories`, slug unik bersufiks).
+- [x] Modul Blog `/admin/posts`: CRUD artikel dengan Tiptap (heading, bold, italic, daftar, tautan, gambar, kutipan).
+- [x] Field: judul, slug otomatis, kategori, penulis (default pengguna aktif), gambar utama (MediaPicker), ringkasan (excerpt), tanggal terbit, penjadwalan (`datetime-local`), status Draft/Published, SEO.
+- [x] Sanitasi HTML konten sebelum simpan (`lib/sanitize.ts`, whitelist tag + drop script/style/iframe; `ponytail:` tanpa DOMPurify).
+- [x] Revalidasi `revalidatePath` (`/admin/posts` + `/blog`) saat artikel dibuat/diubah/dihapus.
 
 **Acceptance criteria**
 - Artikel berstatus Published dengan `published_at` di masa depan tidak tampil sampai waktunya tiba.
