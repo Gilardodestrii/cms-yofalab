@@ -14,11 +14,21 @@ export const dynamic = "force-dynamic";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  let product: { name: string; seoTitle: string | null; seoDescription: string | null; shortDescription: string | null } | null = null;
+  let product: {
+    name: string;
+    seoTitle: string | null;
+    seoDescription: string | null;
+    shortDescription: string | null;
+  } | null = null;
   try {
     product = await db.product.findFirst({
       where: { slug, status: "PUBLISHED" },
-      select: { name: true, seoTitle: true, seoDescription: true, shortDescription: true },
+      select: {
+        name: true,
+        seoTitle: true,
+        seoDescription: true,
+        shortDescription: true,
+      },
     });
   } catch {
     // Database belum siap saat build: metadata generik.
@@ -26,7 +36,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!product) return { title: "Produk tidak ditemukan" };
   return {
     title: product.seoTitle || product.name,
-    description: product.seoDescription || product.shortDescription || `Detail produk ${product.name} YOFALAB Indonesia.`,
+    description:
+      product.seoDescription ||
+      product.shortDescription ||
+      `Detail produk ${product.name} YOFALAB Indonesia.`,
     alternates: { canonical: `/product/${slug}` },
     openGraph: {
       type: "website",
@@ -42,37 +55,45 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 /** Detail produk publik: galeri, tab Description, brosur, produk terkait. */
 export default async function ProductDetailPage({ params }: Props) {
   const { slug } = await params;
-  const product = await db.product.findFirst({
-    where: { slug, status: "PUBLISHED" },
-    include: {
-      category: { select: { name: true, slug: true } },
-      images: {
-        orderBy: { sortOrder: "asc" },
-        include: { media: { select: { path: true, fileName: true, altText: true } } },
-      },
-      brochure: { select: { path: true, fileName: true } },
-      productTags: { include: { tag: { select: { name: true } } } },
-      relatedFrom: {
-        orderBy: { sortOrder: "asc" },
-        take: 5,
-        include: {
-          relatedProduct: {
-            select: {
-              name: true,
-              slug: true,
-              status: true,
-              category: { select: { name: true } },
-              images: {
-                where: { isPrimary: true },
-                take: 1,
-                select: { media: { select: { path: true, fileName: true, altText: true } } },
+  const product = await db.product
+    .findFirst({
+      where: { slug, status: "PUBLISHED" },
+      include: {
+        category: { select: { name: true, slug: true } },
+        images: {
+          orderBy: { sortOrder: "asc" },
+          include: {
+            media: { select: { path: true, fileName: true, altText: true } },
+          },
+        },
+        brochure: { select: { path: true, fileName: true } },
+        productTags: { include: { tag: { select: { name: true } } } },
+        relatedFrom: {
+          orderBy: { sortOrder: "asc" },
+          take: 5,
+          include: {
+            relatedProduct: {
+              select: {
+                name: true,
+                slug: true,
+                status: true,
+                category: { select: { name: true } },
+                images: {
+                  where: { isPrimary: true },
+                  take: 1,
+                  select: {
+                    media: {
+                      select: { path: true, fileName: true, altText: true },
+                    },
+                  },
+                },
               },
             },
           },
         },
       },
-    },
-  });
+    })
+    .catch(() => null);
   if (!product) notFound();
 
   const waLink = whatsappLink((await getContactSetting()).whatsapp);
@@ -84,7 +105,11 @@ export default async function ProductDetailPage({ params }: Props) {
   let related = manual;
   if (related.length === 0) {
     related = await db.product.findMany({
-      where: { status: "PUBLISHED", categoryId: product.categoryId, id: { not: product.id } },
+      where: {
+        status: "PUBLISHED",
+        categoryId: product.categoryId,
+        id: { not: product.id },
+      },
       orderBy: { sortOrder: "asc" },
       take: 5,
       select: {
@@ -95,7 +120,9 @@ export default async function ProductDetailPage({ params }: Props) {
         images: {
           where: { isPrimary: true },
           take: 1,
-          select: { media: { select: { path: true, fileName: true, altText: true } } },
+          select: {
+            media: { select: { path: true, fileName: true, altText: true } },
+          },
         },
       },
     });
@@ -107,7 +134,8 @@ export default async function ProductDetailPage({ params }: Props) {
   const apps = Array.isArray(product.applications)
     ? (product.applications as string[])
     : [];
-  const primary = product.images.find((img) => img.isPrimary) ?? product.images[0];
+  const primary =
+    product.images.find((img) => img.isPrimary) ?? product.images[0];
 
   return (
     <div>
@@ -128,17 +156,34 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="flex aspect-square items-center justify-center overflow-hidden rounded-lg bg-surface-muted">
             {primary ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={primary.media.path} alt={primary.media.altText ?? primary.media.fileName} className="h-full w-full object-cover" />
+              <img
+                src={primary.media.path}
+                alt={primary.media.altText ?? primary.media.fileName}
+                className="h-full w-full object-cover"
+              />
             ) : (
-              <span aria-hidden="true" className="font-heading text-6xl text-ink-400">▣</span>
+              <span
+                aria-hidden="true"
+                className="font-heading text-6xl text-ink-400"
+              >
+                ▣
+              </span>
             )}
           </div>
           {product.images.length > 1 && (
             <ul className="mt-3 grid grid-cols-4 gap-2">
               {product.images.map((img) => (
-                <li key={img.id.toString()} className="flex aspect-square items-center justify-center overflow-hidden rounded-sm bg-surface-muted">
+                <li
+                  key={img.id.toString()}
+                  className="flex aspect-square items-center justify-center overflow-hidden rounded-sm bg-surface-muted"
+                >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={img.media.path} alt={img.media.altText ?? img.media.fileName} loading="lazy" className="h-full w-full object-cover" />
+                  <img
+                    src={img.media.path}
+                    alt={img.media.altText ?? img.media.fileName}
+                    loading="lazy"
+                    className="h-full w-full object-cover"
+                  />
                 </li>
               ))}
             </ul>
@@ -147,15 +192,22 @@ export default async function ProductDetailPage({ params }: Props) {
 
         {/* Informasi 7/12 */}
         <div className="md:col-span-7">
-          <h1 className="font-heading text-3xl font-bold text-ink-900">{product.name}</h1>
+          <h1 className="font-heading text-3xl font-bold text-ink-900">
+            {product.name}
+          </h1>
           <p className="label-caps mt-2">{product.category.name}</p>
           {product.shortDescription && (
-            <p className="mt-4 font-body text-lg text-ink-600">{product.shortDescription}</p>
+            <p className="mt-4 font-body text-lg text-ink-600">
+              {product.shortDescription}
+            </p>
           )}
           {product.productTags.length > 0 && (
             <ul className="mt-3 flex flex-wrap gap-2" aria-label="Tag produk">
               {product.productTags.map((t) => (
-                <li key={t.tag.name} className="rounded-full bg-brand-50 px-3 py-1 font-body text-xs text-brand-700">
+                <li
+                  key={t.tag.name}
+                  className="rounded-full bg-brand-50 px-3 py-1 font-body text-xs text-brand-700"
+                >
                   {t.tag.name}
                 </li>
               ))}
@@ -168,7 +220,12 @@ export default async function ProductDetailPage({ params }: Props) {
               </a>
             )}
             {waLink ? (
-              <a href={waLink} target="_blank" rel="noopener noreferrer" className="btn-outline">
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-outline"
+              >
                 WhatsApp
               </a>
             ) : null}
@@ -189,12 +246,22 @@ export default async function ProductDetailPage({ params }: Props) {
                 <div className="flex flex-col gap-8">
                   {specs.length > 0 && (
                     <div>
-                      <h2 className="font-heading text-xl font-semibold text-ink-900">Specifications</h2>
+                      <h2 className="font-heading text-xl font-semibold text-ink-900">
+                        Specifications
+                      </h2>
                       <ul className="mt-3 flex flex-col gap-2">
                         {specs.map((s, i) => (
-                          <li key={i} className="flex gap-2 font-body text-base text-ink-600">
-                            <span aria-hidden="true" className="text-brand-600">•</span>
-                            <span><strong className="text-ink-900">{s.key}:</strong> {s.value}</span>
+                          <li
+                            key={i}
+                            className="flex gap-2 font-body text-base text-ink-600"
+                          >
+                            <span aria-hidden="true" className="text-brand-600">
+                              •
+                            </span>
+                            <span>
+                              <strong className="text-ink-900">{s.key}:</strong>{" "}
+                              {s.value}
+                            </span>
                           </li>
                         ))}
                       </ul>
@@ -202,11 +269,18 @@ export default async function ProductDetailPage({ params }: Props) {
                   )}
                   {apps.length > 0 && (
                     <div>
-                      <h2 className="font-heading text-xl font-semibold text-ink-900">Applications</h2>
+                      <h2 className="font-heading text-xl font-semibold text-ink-900">
+                        Applications
+                      </h2>
                       <ul className="mt-3 flex flex-col gap-2">
                         {apps.map((a, i) => (
-                          <li key={i} className="flex gap-2 font-body text-base text-ink-600">
-                            <span aria-hidden="true" className="text-brand-600">•</span>
+                          <li
+                            key={i}
+                            className="flex gap-2 font-body text-base text-ink-600"
+                          >
+                            <span aria-hidden="true" className="text-brand-600">
+                              •
+                            </span>
                             <span>{a}</span>
                           </li>
                         ))}
@@ -214,7 +288,9 @@ export default async function ProductDetailPage({ params }: Props) {
                     </div>
                   )}
                   {specs.length === 0 && apps.length === 0 && (
-                    <p className="font-body text-base text-ink-400">Belum ada spesifikasi untuk produk ini.</p>
+                    <p className="font-body text-base text-ink-400">
+                      Belum ada spesifikasi untuk produk ini.
+                    </p>
                   )}
                 </div>
               ),
@@ -244,7 +320,9 @@ export default async function ProductDetailPage({ params }: Props) {
                 name={p.name}
                 categoryName={p.category.name}
                 imagePath={p.images[0]?.media.path}
-                imageAlt={p.images[0]?.media.altText ?? p.images[0]?.media.fileName}
+                imageAlt={
+                  p.images[0]?.media.altText ?? p.images[0]?.media.fileName
+                }
               />
             ))}
           </div>

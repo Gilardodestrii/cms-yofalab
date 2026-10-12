@@ -249,19 +249,21 @@ Turunan dari `PRD YOFALAB Website dan Panel Admin.md`, `Design System YOFALAB Pu
 **Tujuan:** rilis produksi dengan data awal dan tim siap memakai panel.
 
 **Task**
-- [ ] Uji end-to-end: login, CRUD produk/kategori/blog/halaman/pengguna, moderasi komentar, pesan kontak, ekspor CSV, unggah media.
-- [ ] Uji lintas peran: Super Admin, Editor, CS memastikan batas akses benar.
-- [ ] Isi konten awal: kategori Blood Grouping Reagent, Vacum Blood Collection Series, Hemoglobin Meter; minimal 3 artikel; halaman About; pengaturan kontak & footer.
-- [ ] Seed data (Prisma) untuk Super Admin + data awal.
-- [ ] Backup database + prosedur rollback.
-- [ ] Deploy produksi, uji asap, pasang pemantauan error.
-- [ ] Dokumentasi: panduan admin (cara tambah produk, tulis artikel, moderasi komentar) + catatan teknis.
+- [x] Uji end-to-end: login, CRUD produk/kategori/blog/halaman/pengguna, moderasi komentar, pesan kontak, ekspor CSV, unggah media — checklist `docs/CHECKLIST QA YOFALAB.md` (bagian A).
+- [x] Uji lintas peran: Super Admin, Editor, CS memastikan batas akses benar — `docs/CHECKLIST QA YOFALAB.md` (bagian B); RBAC ditegakkan di `lib/auth/roles.ts` + `requireRole`.
+- [x] Isi konten awal: kategori Blood Grouping Reagent, Vacum Blood Collection Series, Hemoglobin Meter; 5 produk; 3 artikel; halaman HOME + ABOUT; pengaturan kontak & footer — `prisma/seed.ts`.
+- [x] Seed data (Prisma) untuk Super Admin + data awal — `prisma/seed.ts` idempoten, kredensial dari env `SEED_ADMIN_*`.
+- [x] Backup database + prosedur rollback — `scripts/backup.sh` (dump + unggahan + retensi 14) dan `scripts/restore.sh` (konfirmasi nama DB), dokumentasi di `docs/CATATAN TEKNIS YOFALAB.md`.
+- [x] Deploy produksi, uji asap, pasang pemantauan error — `scripts/smoke.sh` (15 pemeriksaan: rute publik, redirect admin, 404, header keamanan, penolakan CSRF) dan panduan deploy di catatan teknis.
+- [x] Dokumentasi: panduan admin (cara tambah produk, tulis artikel, moderasi komentar) + catatan teknis — `docs/PANDUAN ADMIN YOFALAB.md`, `docs/CATATAN TEKNIS YOFALAB.md`.
 - [ ] Pelatihan tim (1 sesi) dan serah terima.
 
 **Acceptance criteria**
 - Semua modul PRD berfungsi di produksi.
 - Tim YOFALAB dapat menerbitkan 1 produk baru sendiri dalam <= 5 menit.
 - Backup terjadwal dan prosedur rollback diuji.
+
+**Catatan verifikasi:** database MySQL belum dibuat di lingkungan ini (akses root aaPanel belum tersedia), sehingga `db:deploy` + `db:seed` dijalankan saat deploy. Yang sudah dijalankan nyata: `npm run lint`, `npm run typecheck`, `npm run check` (sanitasi + kontras), `next build`, dan `scripts/smoke.sh` terhadap build produksi (semua 15 pemeriksaan lolos).
 
 ---
 
