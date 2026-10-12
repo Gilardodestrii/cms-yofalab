@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { db } from "@/lib/db";
 import { Breadcrumb } from "@/components/admin/breadcrumb";
-import { ButtonLink } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -23,28 +22,38 @@ function formatDate(date: Date): string {
  * menunggu), 5 pesan terbaru, dan pintasan tambah konten.
  */
 export default async function AdminDashboardPage() {
-  const [productCount, postCount, newMessageCount, pendingCommentCount, latestMessages] =
-    await Promise.all([
-      db.product.count(),
-      db.post.count(),
-      db.contactMessage.count({ where: { status: "NEW" } }),
-      db.comment.count({ where: { status: "PENDING" } }),
-      db.contactMessage.findMany({
-        orderBy: { createdAt: "desc" },
-        take: 5,
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          subject: true,
-          status: true,
-          createdAt: true,
-        },
-      }),
-    ]);
+  const [
+    productCount,
+    postCount,
+    newMessageCount,
+    pendingCommentCount,
+    latestMessages,
+  ] = await Promise.all([
+    db.product.count(),
+    db.post.count(),
+    db.contactMessage.count({ where: { status: "NEW" } }),
+    db.comment.count({ where: { status: "PENDING" } }),
+    db.contactMessage.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        subject: true,
+        status: true,
+        createdAt: true,
+      },
+    }),
+  ]);
 
   const cards = [
-    { label: "Produk", value: productCount, href: "/admin/products", icon: "▣" },
+    {
+      label: "Produk",
+      value: productCount,
+      href: "/admin/products",
+      icon: "▣",
+    },
     { label: "Artikel", value: postCount, href: "/admin/posts", icon: "✎" },
     {
       label: "Pesan Baru",
@@ -65,12 +74,16 @@ export default async function AdminDashboardPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Breadcrumb items={[{ label: "Dashboard" }]} />
         <div className="flex gap-3">
-          <ButtonLink href="/admin/products/new" variant="primary">
+          {/* Memakai token admin (h-9), bukan `ButtonLink` publik: token publik
+              memadukan `btn-primary` (h-10) dengan `btn-outline` (h-12) sehingga
+              kedua tombol ini tampil beda tinggi. Token admin seragam 36 px dan
+              sama dengan tombol aksi di halaman admin lain. */}
+          <Link href="/admin/products/new" className="btn-admin">
             Tambah Produk
-          </ButtonLink>
-          <ButtonLink href="/admin/posts/new" variant="outline">
+          </Link>
+          <Link href="/admin/posts/new" className="btn-admin-secondary">
             Tulis Artikel
-          </ButtonLink>
+          </Link>
         </div>
       </div>
 

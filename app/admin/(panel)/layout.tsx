@@ -1,6 +1,4 @@
-import { AdminSidebar } from "@/components/admin/admin-sidebar";
-import { AdminTopbar } from "@/components/admin/admin-topbar";
-import { ToastProvider } from "@/components/admin/toast";
+import { AdminShell } from "@/components/admin/admin-shell";
 import { requireUser } from "@/lib/auth/guards";
 
 /**
@@ -19,6 +17,10 @@ export const dynamic = "force-dynamic";
  * Layout panel admin (sidebar + topbar). Ditempatkan pada route group `(panel)`
  * sehingga `/admin/login` tetap tampil tanpa kerangka ini.
  *
+ * Kerangka visualnya ada di `AdminShell` (komponen klien) karena status laci
+ * mobile perlu dibagi antara topbar dan sidebar. `children` tetap dirender di
+ * server, jadi isi halaman tidak ikut menjadi bundle klien.
+ *
  * `requireUser()` menegakkan autentikasi di server sebagai lapisan kedua
  * setelah middleware.
  */
@@ -29,17 +31,5 @@ export default async function AdminPanelLayout({
 }) {
   const user = await requireUser("/admin");
 
-  return (
-    <ToastProvider>
-      <div className="flex min-h-screen bg-surface-admin">
-        <AdminSidebar role={user.role} />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <AdminTopbar user={user} />
-          <main className="mx-auto w-full max-w-[1280px] flex-1 p-6">
-            {children}
-          </main>
-        </div>
-      </div>
-    </ToastProvider>
-  );
+  return <AdminShell user={user}>{children}</AdminShell>;
 }

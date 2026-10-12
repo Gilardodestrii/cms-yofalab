@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import { adminNav } from "@/lib/site";
 import { hasRole, type AppRole } from "@/lib/auth/roles";
 
@@ -16,10 +15,20 @@ function isActive(pathname: string, href: string): boolean {
  * Sidebar admin: lebar 248 px latar `brand-700`, teks putih, item aktif
  * berlatar putih 12% dengan garis kiri 3 px `brand-300`.
  * Di layar < lg, sidebar menjadi laci yang dibuka lewat tombol di topbar.
+ *
+ * Status `open` dikendalikan induk (`AdminShell`) karena tombol pembukanya
+ * berada di topbar, bukan di dalam sidebar.
  */
-export function AdminSidebar({ role }: { role: AppRole }) {
+export function AdminSidebar({
+  role,
+  open,
+  onOpenChange,
+}: {
+  role: AppRole;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}) {
   const pathname = usePathname();
-  const [open, setOpen] = useState(false);
 
   const groups = adminNav
     .map((g) => ({
@@ -42,11 +51,11 @@ export function AdminSidebar({ role }: { role: AppRole }) {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    onClick={() => setOpen(false)}
+                    onClick={() => onOpenChange(false)}
                     aria-current={active ? "page" : undefined}
                     className={`flex items-center gap-3 rounded-sm py-2 pl-3 pr-2 font-body text-sm transition-colors ${
                       active
-                        ? "border-l-[3px] border-brand-300 bg-white/12 font-semibold text-white"
+                        ? "bg-white/12 border-l-[3px] border-brand-300 font-semibold text-white"
                         : "border-l-[3px] border-transparent text-white/80 hover:bg-white/10 hover:text-white"
                     }`}
                   >
@@ -66,18 +75,6 @@ export function AdminSidebar({ role }: { role: AppRole }) {
 
   return (
     <>
-      {/* Tombol laci (mobile) */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        aria-label="Buka menu"
-        aria-expanded={open}
-        aria-controls="admin-sidebar"
-        className="btn-admin-secondary fixed left-4 top-4 z-40 lg:hidden"
-      >
-        ☰
-      </button>
-
       {/* Sidebar desktop */}
       <aside
         id="admin-sidebar"
@@ -91,13 +88,13 @@ export function AdminSidebar({ role }: { role: AppRole }) {
         <div className="fixed inset-0 z-50 lg:hidden">
           <div
             className="absolute inset-0 bg-ink-900/40"
-            onClick={() => setOpen(false)}
+            onClick={() => onOpenChange(false)}
             aria-hidden="true"
           />
           <div className="absolute left-0 top-0 h-full w-[248px] overflow-y-auto bg-brand-700">
             <button
               type="button"
-              onClick={() => setOpen(false)}
+              onClick={() => onOpenChange(false)}
               aria-label="Tutup menu"
               className="absolute right-3 top-3 text-white/80 hover:text-white"
             >
