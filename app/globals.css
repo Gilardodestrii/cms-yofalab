@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface font-body text-ink-600 antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading text-ink-900;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Hormati prefers-reduced-motion untuk seluruh transisi. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer components {
+  /* Kontainer publik: maks 1230 px, gutter 16 px mobile / 24 px desktop. */
+  .container-site {
+    @apply mx-auto w-full max-w-container px-4 md:px-6;
+  }
+
+  /* Lebar baca artikel. */
+  .reading-width {
+    @apply mx-auto w-full max-w-reading;
+  }
+
+  /* Tombol utama: latar brand-500, teks putih, tinggi 40 px. */
+  .btn-primary {
+    @apply inline-flex h-10 items-center justify-center rounded-sm bg-brand-500 px-5 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Tombol hero: latar brand-700, radius md. */
+  .btn-hero {
+    @apply inline-flex h-12 items-center justify-center rounded-md bg-brand-700 px-6 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
+  }
+
+  /* Tombol garis (Download Brosur). */
+  .btn-outline {
+    @apply inline-flex h-12 items-center justify-center rounded-sm border-2 border-brand-700 bg-white px-6 font-heading text-sm font-semibold text-brand-700 transition-colors duration-150 ease-out hover:bg-brand-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
+  }
+
+  /* Label kategori: huruf kapital kecil. */
+  .label-caps {
+    @apply font-heading text-xs font-semibold uppercase tracking-wide text-ink-400;
+  }
+
+  /* ---------- Panel Admin ---------- */
+
+  /* Tombol admin: tinggi 36 px, radius sm, kepadatan lebih rapat. */
+  .btn-admin {
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm bg-brand-500 px-4 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Tombol sekunder admin: garis, latar putih. */
+  .btn-admin-secondary {
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm border border-line bg-surface px-4 font-heading text-sm font-semibold text-ink-900 transition-colors duration-150 ease-out hover:bg-surface-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Tombol bahaya admin: latar danger. */
+  .btn-admin-danger {
+    @apply inline-flex h-9 items-center justify-center gap-2 rounded-sm bg-danger px-4 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  /* Input admin: tinggi 40 px, border line, fokus cincin brand-500. */
+  .input-admin {
+    @apply h-10 w-full rounded-sm border border-line bg-surface px-3 font-body text-sm text-ink-900 placeholder:text-ink-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/30 disabled:cursor-not-allowed disabled:bg-surface-muted;
+  }
+
+  /* Label field admin. */
+  .field-label {
+    @apply mb-1 block font-heading text-sm font-semibold text-ink-900;
+  }
+
+  /* Kartu panel admin: putih, radius md, bayangan panel. */
+  .panel-card {
+    @apply rounded-md border border-line bg-surface shadow-panel;
+  }
+}

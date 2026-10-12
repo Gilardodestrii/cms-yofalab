@@ -1,0 +1,301 @@
+// YOFALAB: skema Prisma.
+// Selaras 1:1 dengan `docs/schema.sql` (MySQL 8, utf8mb4, InnoDB).
+// Enum, FK, indeks, dan FULLTEXT dipertahankan agar migrasi menghasilkan
+// struktur database yang identik dengan skema acuan.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  SUPER_ADMIN
+  EDITOR
+  CS
+}
+
+enum ProductStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum CommentStatus {
+  PENDING
+  APPROVED
+  SPAM
+}
+
+enum MessageStatus {
+  NEW
+  READ
+  FOLLOWED_UP
+}
+
+enum PageKey {
+  HOME
+  ABOUT
+}
+
+/// ---------- Pengguna admin ----------
+model User {
+  id           BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String    @db.VarChar(120)
+  email        String    @unique @db.VarChar(190)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  role         Role      @default(EDITOR)
+  isActive     Boolean   @default(true) @map("is_active") @db.TinyInt
+  lastLoginAt  DateTime? @map("last_login_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  mediaUploads Media[]       @relation("MediaUploader")
+  posts        Post[]
+  pages        Page[]        @relation("PageUpdater")
+  activityLogs ActivityLog[]
+
+  @@map("users")
+}
+
+/// ---------- Media ----------
+model Media {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  fileName   String   @map("file_name") @db.VarChar(255)
+  path       String   @db.VarChar(500)
+  mimeType   String   @map("mime_type") @db.VarChar(100)
+  size       Int      @db.UnsignedInt
+  width      Int?     @db.UnsignedInt
+  height     Int?     @db.UnsignedInt
+  altText    String?  @map("alt_text") @db.VarChar(255)
+  uploadedBy BigInt?  @map("uploaded_by") @db.UnsignedBigInt
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  uploader          User?             @relation("MediaUploader", fields: [uploadedBy], references: [id], onDelete: SetNull)
+  productCategories ProductCategory[]
+  productImages     ProductImage[]
+  products          Product[]         @relation("ProductBrochure")
+  posts             Post[]            @relation("PostCover")
+
+  @@map("media")
+}
+
+/// ---------- Produk ----------
+model ProductCategory {
+  id           BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String   @db.VarChar(150)
+  slug         String   @unique @db.VarChar(190)
+  imageMediaId BigInt?  @map("image_media_id") @db.UnsignedBigInt
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  imageMedia Media?    @relation(fields: [imageMediaId], references: [id], onDelete: SetNull)
+  products   Product[]
+
+  @@map("product_categories")
+}
+
+model Product {
+  id               BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  categoryId       BigInt        @map("category_id") @db.UnsignedBigInt
+  name             String        @db.VarChar(200)
+  slug             String        @unique @db.VarChar(220)
+  shortDescription String?       @map("short_description") @db.Text
+  specifications   Json?
+  applications     Json?
+  brochureMediaId  BigInt?       @map("brochure_media_id") @db.UnsignedBigInt
+  status           ProductStatus @default(DRAFT)
+  sortOrder        Int           @default(0) @map("sort_order")
+  seoTitle         String?       @map("seo_title") @db.VarChar(190)
+  seoDescription   String?       @map("seo_description") @db.VarChar(320)
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
+
+  category    ProductCategory  @relation(fields: [categoryId], references: [id])
+  brochure    Media?           @relation("ProductBrochure", fields: [brochureMediaId], references: [id], onDelete: SetNull)
+  images      ProductImage[]
+  productTags ProductTag[]
+  relatedFrom ProductRelated[] @relation("RelatedFrom")
+  relatedTo   ProductRelated[] @relation("RelatedTo")
+
+  @@index([status, categoryId, sortOrder], map: "idx_products_list")
+  @@map("products")
+}
+
+model ProductImage {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  productId BigInt   @map("product_id") @db.UnsignedBigInt
+  mediaId   BigInt   @map("media_id") @db.UnsignedBigInt
+  isPrimary Boolean  @default(false) @map("is_primary") @db.TinyInt
+  sortOrder Int      @default(0) @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media   Media   @relation(fields: [mediaId], references: [id])
+
+  @@map("product_images")
+}
+
+model Tag {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  name      String   @db.VarChar(100)
+  slug      String   @unique @db.VarChar(120)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  productTags ProductTag[]
+
+  @@map("tags")
+}
+
+model ProductTag {
+  productId BigInt @map("product_id") @db.UnsignedBigInt
+  tagId     BigInt @map("tag_id") @db.UnsignedBigInt
+
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  tag     Tag     @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([productId, tagId])
+  @@map("product_tags")
+}
+
+/// Produk terkait manual (opsional; bila kosong, otomatis dari kategori sama)
+model ProductRelated {
+  productId        BigInt @map("product_id") @db.UnsignedBigInt
+  relatedProductId BigInt @map("related_product_id") @db.UnsignedBigInt
+  sortOrder        Int    @default(0) @map("sort_order")
+
+  product        Product @relation("RelatedFrom", fields: [productId], references: [id], onDelete: Cascade)
+  relatedProduct Product @relation("RelatedTo", fields: [relatedProductId], references: [id], onDelete: Cascade)
+
+  @@id([productId, relatedProductId])
+  @@map("product_related")
+}
+
+/// ---------- Blog ----------
+model PostCategory {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  name      String   @db.VarChar(120)
+  slug      String   @unique @db.VarChar(150)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  posts Post[]
+
+  @@map("post_categories")
+}
+
+model Post {
+  id             BigInt     @id @default(autoincrement()) @db.UnsignedBigInt
+  categoryId     BigInt?    @map("category_id") @db.UnsignedBigInt
+  authorId       BigInt     @map("author_id") @db.UnsignedBigInt
+  title          String     @db.VarChar(255)
+  slug           String     @unique @db.VarChar(280)
+  excerpt        String?    @db.Text
+  content        String     @db.LongText
+  coverMediaId   BigInt?    @map("cover_media_id") @db.UnsignedBigInt
+  status         PostStatus @default(DRAFT)
+  publishedAt    DateTime?  @map("published_at")
+  seoTitle       String?    @map("seo_title") @db.VarChar(190)
+  seoDescription String?    @map("seo_description") @db.VarChar(320)
+  createdAt      DateTime   @default(now()) @map("created_at")
+  updatedAt      DateTime   @updatedAt @map("updated_at")
+
+  category PostCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  author   User          @relation(fields: [authorId], references: [id])
+  cover    Media?        @relation("PostCover", fields: [coverMediaId], references: [id], onDelete: SetNull)
+  comments Comment[]
+
+  @@index([status, publishedAt], map: "idx_posts_list")
+  @@map("posts")
+}
+
+model Comment {
+  id        BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  postId    BigInt        @map("post_id") @db.UnsignedBigInt
+  name      String        @db.VarChar(120)
+  email     String        @db.VarChar(190)
+  website   String?       @db.VarChar(255)
+  body      String        @db.Text
+  status    CommentStatus @default(PENDING)
+  ipHash    String?       @map("ip_hash") @db.Char(64)
+  createdAt DateTime      @default(now()) @map("created_at")
+  updatedAt DateTime      @updatedAt @map("updated_at")
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId, status], map: "idx_comments")
+  @@map("comments")
+}
+
+/// ---------- Pesan kontak ----------
+model ContactMessage {
+  id           BigInt        @id @default(autoincrement()) @db.UnsignedBigInt
+  name         String        @db.VarChar(120)
+  email        String        @db.VarChar(190)
+  subject      String?       @db.VarChar(200)
+  message      String        @db.Text
+  status       MessageStatus @default(NEW)
+  internalNote String?       @map("internal_note") @db.Text
+  ipHash       String?       @map("ip_hash") @db.Char(64)
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+
+  @@index([status, createdAt], map: "idx_messages_list")
+  @@map("contact_messages")
+}
+
+/// ---------- Halaman statis dan pengaturan ----------
+model Page {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  key       PageKey  @unique
+  content   Json
+  updatedBy BigInt?  @map("updated_by") @db.UnsignedBigInt
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  updater User? @relation("PageUpdater", fields: [updatedBy], references: [id], onDelete: SetNull)
+
+  @@map("pages")
+}
+
+model SiteSetting {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  key       String   @unique @db.VarChar(100)
+  value     Json
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+/// ---------- Log aktivitas ----------
+model ActivityLog {
+  id        BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  userId    BigInt?  @map("user_id") @db.UnsignedBigInt
+  action    String   @db.VarChar(40)
+  entity    String   @db.VarChar(60)
+  entityId  BigInt?  @map("entity_id") @db.UnsignedBigInt
+  meta      Json?
+  ip        String?  @db.VarChar(45)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([entity, entityId, createdAt], map: "idx_logs")
+  @@map("activity_logs")
+}
+
+
