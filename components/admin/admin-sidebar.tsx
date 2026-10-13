@@ -75,10 +75,10 @@ export function AdminSidebar({
 
   return (
     <>
-      {/* Sidebar desktop */}
+      {/* Sidebar desktop: track gulir sendiri agar tidak ikut naik bersama isi halaman. */}
       <aside
         id="admin-sidebar"
-        className="hidden w-[248px] shrink-0 bg-brand-700 lg:block"
+        className="hidden w-[248px] shrink-0 overflow-y-auto overscroll-y-contain bg-brand-700 lg:block"
       >
         {nav}
       </aside>
