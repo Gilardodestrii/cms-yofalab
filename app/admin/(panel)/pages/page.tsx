@@ -32,6 +32,7 @@ export default async function AdminPagesPage() {
           stats: home.stats,
           getToKnowTitle: home.getToKnowTitle,
           getToKnowBody: home.getToKnowBody,
+          getToKnowImagePath: home.getToKnowImagePath,
           advantages: home.advantages,
         }}
       />

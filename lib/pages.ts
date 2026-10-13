@@ -30,6 +30,7 @@ export async function getHomePageContent(): Promise<HomePageContent> {
     stats: data.stats.length > 0 ? data.stats : DEFAULT_HOME_CONTENT.stats,
     getToKnowTitle: data.getToKnowTitle || DEFAULT_HOME_CONTENT.getToKnowTitle,
     getToKnowBody: data.getToKnowBody || DEFAULT_HOME_CONTENT.getToKnowBody,
+    getToKnowImagePath: data.getToKnowImagePath || DEFAULT_HOME_CONTENT.getToKnowImagePath,
     advantages:
       data.advantages.length > 0 ? data.advantages : DEFAULT_HOME_CONTENT.advantages,
   };

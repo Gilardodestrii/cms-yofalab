@@ -36,6 +36,8 @@ export const homePageSchema = z.object({
   stats: z.array(statSchema).max(6).default([]),
   getToKnowTitle: z.string().trim().max(190).default(""),
   getToKnowBody: z.string().trim().max(2000).default(""),
+  /** Path media gambar blok Get to Know (kosong = tanpa gambar). */
+  getToKnowImagePath: z.string().trim().max(500).default(""),
   advantages: z.array(advantageSchema).max(6).default([]),
 });
 
@@ -66,6 +68,7 @@ export const DEFAULT_HOME_CONTENT: HomePageContent = {
   getToKnowTitle: "Mitra laboratorium Anda sejak 2015",
   getToKnowBody:
     "YOFALAB Indonesia menyediakan alat kesehatan, reagen, dan layanan pelatihan untuk laboratorium di seluruh Indonesia.",
+  getToKnowImagePath: "",
   advantages: [
     {
       title: "High Quality",

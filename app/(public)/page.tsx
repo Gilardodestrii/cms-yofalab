@@ -135,16 +135,36 @@ export default async function HomePage() {
 
       {/* Get to Know */}
       <section className="container-site py-10">
-        <CategoryLabel>Get to Know YOFALAB</CategoryLabel>
-        <h2 className="mt-2 font-heading text-2xl font-semibold text-ink-900 md:text-3xl">
-          {content.getToKnowTitle}
-        </h2>
-        <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
-          {content.getToKnowBody}{" "}
-          <Link href="/about" className="font-semibold text-brand-600 hover:text-brand-600">
-            Pelajari lebih lanjut →
-          </Link>
-        </p>
+        <div
+          className={
+            content.getToKnowImagePath
+              ? "grid items-center gap-8 md:grid-cols-2"
+              : undefined
+          }
+        >
+          {content.getToKnowImagePath ? (
+            <div className="overflow-hidden rounded-md bg-surface-muted shadow-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={content.getToKnowImagePath}
+                alt={content.getToKnowTitle}
+                className="aspect-[4/3] w-full object-cover"
+              />
+            </div>
+          ) : null}
+          <div>
+            <CategoryLabel>Get to Know YOFALAB</CategoryLabel>
+            <h2 className="mt-2 font-heading text-2xl font-semibold text-ink-900 md:text-3xl">
+              {content.getToKnowTitle}
+            </h2>
+            <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
+              {content.getToKnowBody}{" "}
+              <Link href="/about" className="font-semibold text-brand-600 hover:text-brand-600">
+                Pelajari lebih lanjut →
+              </Link>
+            </p>
+          </div>
+        </div>
       </section>
 
       {/* Keunggulan */}

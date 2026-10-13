@@ -43,6 +43,7 @@ export function HomePageForm({ initial }: { initial: {
   stats: { value: string; label: string }[];
   getToKnowTitle: string;
   getToKnowBody: string;
+  getToKnowImagePath: string;
   advantages: { title: string; body: string }[];
 } }) {
   const [state, formAction, pending] = useActionState(saveHomePageAction, initialState);
@@ -50,6 +51,20 @@ export function HomePageForm({ initial }: { initial: {
   // Slide tetap dikelola sebagai daftar gambar; editor ringkas: satu gambar per baris.
   const [slides, setSlides] = useState<MediaItem[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
+
+  // Gambar blok Get to Know (tunggal, opsional) — tampil di sebelah kiri teks.
+  const [knowImage, setKnowImage] = useState<MediaItem | null>(
+    initial.getToKnowImagePath
+      ? {
+          id: "existing",
+          path: initial.getToKnowImagePath,
+          fileName: initial.getToKnowImagePath.split("/").pop() ?? "gambar",
+          altText: null,
+          mimeType: "",
+        }
+      : null,
+  );
+  const [knowPickerOpen, setKnowPickerOpen] = useState(false);
 
   return (
     <form action={formAction} noValidate className="panel-card p-6">
@@ -75,6 +90,48 @@ export function HomePageForm({ initial }: { initial: {
       </FormField>
       <FormField htmlFor="getToKnowBody" label="Isi blok Get to Know">
         <TextArea id="getToKnowBody" name="getToKnowBody" rows={4} maxLength={2000} defaultValue={initial.getToKnowBody} />
+      </FormField>
+
+      <FormField
+        htmlFor="getToKnowImage"
+        label="Gambar blok Get to Know"
+        hint="Opsional; tampil di sebelah kiri teks. Pilih dari pustaka media."
+      >
+        <input
+          type="hidden"
+          id="getToKnowImage"
+          name="getToKnowImage"
+          value={knowImage ? JSON.stringify(knowImage) : ""}
+        />
+        <div className="flex flex-wrap items-center gap-3">
+          {knowImage ? (
+            <span className="relative">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={knowImage.path}
+                alt={knowImage.altText ?? knowImage.fileName}
+                className="h-20 w-28 rounded-sm border border-line object-cover"
+              />
+              <button
+                type="button"
+                onClick={() => setKnowImage(null)}
+                className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-danger font-body text-xs text-white"
+                aria-label={`Hapus gambar ${knowImage.fileName}`}
+              >
+                ×
+              </button>
+            </span>
+          ) : (
+            <span className="font-body text-sm text-ink-400">Belum ada gambar.</span>
+          )}
+          <button
+            type="button"
+            className="btn-admin-secondary h-8 px-3 text-xs"
+            onClick={() => setKnowPickerOpen(true)}
+          >
+            {knowImage ? "Ganti gambar" : "Pilih gambar"}
+          </button>
+        </div>
       </FormField>
 
       <FormField htmlFor="advantages" label="Tiga keunggulan" hint="Format: judul|isi — satu per baris (maks 6).">
@@ -111,6 +168,11 @@ export function HomePageForm({ initial }: { initial: {
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={(m) => setSlides((prev) => [...prev, m])}
+      />
+      <MediaPicker
+        open={knowPickerOpen}
+        onClose={() => setKnowPickerOpen(false)}
+        onSelect={(m) => setKnowImage(m)}
       />
     </form>
   );

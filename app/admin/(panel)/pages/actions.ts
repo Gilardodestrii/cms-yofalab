@@ -50,6 +50,18 @@ function parseAdvantages(value: FormDataEntryValue | null) {
   });
 }
 
+/** Path gambar tunggal dari hidden input JSON (dikirim komponen MediaPicker). */
+function parseImagePath(value: FormDataEntryValue | null): string {
+  if (typeof value !== "string" || !value.trim()) return "";
+  try {
+    const raw = JSON.parse(value) as { path?: string };
+    const path = raw?.path;
+    return typeof path === "string" && path.startsWith("/uploads/") ? path : "";
+  } catch {
+    return "";
+  }
+}
+
 /** Slide hero dari hidden input JSON (dikirim komponen MediaPicker). */
 function parseSlides(value: FormDataEntryValue | null) {
   if (typeof value !== "string" || !value.trim()) return [];
@@ -89,6 +101,7 @@ export async function saveHomePageAction(
     }),
     getToKnowTitle: formData.get("getToKnowTitle"),
     getToKnowBody: formData.get("getToKnowBody"),
+    getToKnowImagePath: parseImagePath(formData.get("getToKnowImage")),
     advantages: parseAdvantages(formData.get("advantages")),
   });
   if (!parsed.success) {
