@@ -115,7 +115,7 @@ export default async function BlogDetailPage({ params }: Props) {
 
   return (
     <div>
-      <section className="bg-coral">
+      <section className="bg-brand-600">
         <div className="container-site py-10 text-center">
           {post.category && <p className="font-heading text-xs font-semibold uppercase tracking-wide text-white/80">{post.category.name}</p>}
           <h1 className="mt-2 font-heading text-3xl font-bold text-white md:text-4xl">{post.title}</h1>
