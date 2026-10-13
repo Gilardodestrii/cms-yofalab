@@ -31,7 +31,12 @@ const variantClass: Record<ToastVariant, string> = {
 
 /**
  * Provider Toast admin. Bungkus layout admin; panggil `useToast()` di komponen
- * klien untuk memunculkan notifikasi singkat di pojok kanan atas.
+ * klien untuk memunculkan notifikasi singkat.
+ *
+ * Posisi: tepat DI BAWAH header admin (`AdminTopbar`, tinggi `h-16` = 4rem),
+ * bukan menumpuk di atasnya. Offset `top-20` = 5rem memberi jarak 1rem dari
+ * dasar header. `z-20` sengaja di bawah `z-30` milik topbar agar notifikasi
+ * tidak pernah menutupi header saat halaman digulir.
  */
 export function ToastProvider({ children }: { children: ReactNode }) {
   const [toasts, setToasts] = useState<Toast[]>([]);
@@ -52,7 +57,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
       <div
         aria-live="polite"
         aria-atomic="true"
-        className="pointer-events-none fixed right-4 top-4 z-50 flex w-80 flex-col gap-2"
+        className="pointer-events-none fixed right-4 top-20 z-20 flex w-80 flex-col gap-2"
       >
         {toasts.map((t) => (
           <div
