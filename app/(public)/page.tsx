@@ -5,8 +5,6 @@ import { ButtonLink } from "@/components/ui/button";
 import { CategoryLabel } from "@/components/ui/category-label";
 import { SearchInput } from "@/components/ui/search-input";
 import { getHomePageContent } from "@/lib/pages";
-import { getLocale } from "@/lib/locale";
-import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -23,7 +21,6 @@ export const revalidate = 300;
  * `pages.HOME`), carousel kategori produk, pencarian blog, 3 blog terbaru.
  */
 export default async function HomePage() {
-  const locale = await getLocale();
   let categories: {
     name: string;
     slug: string;
@@ -90,10 +87,10 @@ export default async function HomePage() {
           </p>
           <div className="mt-8 flex flex-wrap gap-4">
             <ButtonLink href="/contact" variant="hero">
-              {t("home", "heroCta1", locale)}
+              Contact Us
             </ButtonLink>
             <ButtonLink href="/product" variant="outline">
-              {t("home", "heroCta2", locale)}
+              Lihat Produk
             </ButtonLink>
           </div>
         </div>
@@ -145,7 +142,7 @@ export default async function HomePage() {
         <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
           {content.getToKnowBody}{" "}
           <Link href="/about" className="font-semibold text-brand-600 hover:text-brand-600">
-            {t("home", "learnMore", locale)}
+            Pelajari lebih lanjut →
           </Link>
         </p>
       </section>
@@ -166,14 +163,14 @@ export default async function HomePage() {
       <section className="container-site py-12">
         <div className="flex items-end justify-between">
           <h2 className="font-heading text-2xl font-semibold text-ink-900">
-            {t("home", "productCategory", locale)}
+            Product Category
           </h2>
           <Link href="/product" className="font-body text-sm font-semibold text-brand-600 hover:text-brand-600">
-            {t("home", "viewAll", locale)}
+            Lihat semua →
           </Link>
         </div>
         {categories.length === 0 ? (
-          <p className="mt-4 font-body text-base text-ink-400">{t("home", "noCategory", locale)}</p>
+          <p className="mt-4 font-body text-base text-ink-400">Kategori produk segera hadir.</p>
         ) : (
           <ul className="mt-6 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {categories.map((c) => (
@@ -204,17 +201,14 @@ export default async function HomePage() {
       <section className="bg-brand-50">
         <div className="container-site py-12">
           <h2 className="text-center font-heading text-2xl font-semibold text-ink-900">
-            {t("home", "latestBlog", locale)}
+            Blog Terbaru
           </h2>
           <div className="mt-4 flex justify-center">
-            <SearchInput placeholder={t("home", "searchBlog", locale)} name="q" basePath="/blog" />
+            <SearchInput placeholder="Cari artikel…" name="q" basePath="/blog" />
           </div>
           {latestPosts.length === 0 ? (
             <p className="mt-6 text-center font-body text-base text-ink-400">
-              {t("home", "noPosts", locale)}{" "}
-              <Link href="/blog" className="font-semibold text-brand-600">
-                {t("home", "allArticles", locale)}
-              </Link>
+              Artikel segera hadir. Lihat <Link href="/blog" className="font-semibold text-brand-600">semua artikel →</Link>
             </p>
           ) : (
             <ul className="mt-6 grid gap-6 sm:grid-cols-3">
@@ -236,7 +230,7 @@ export default async function HomePage() {
                       <p className="mt-2 line-clamp-2 font-body text-sm text-ink-600">{p.excerpt}</p>
                     )}
                     <Link href={`/blog/${p.slug}`} className="mt-3 font-body text-sm font-semibold text-brand-600 hover:text-brand-600">
-                      {t("home", "readMore", locale)}
+                      Read more
                     </Link>
                   </div>
                 </li>

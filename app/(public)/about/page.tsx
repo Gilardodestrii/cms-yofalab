@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { getAboutPageContent } from "@/lib/pages";
-import { getLocale } from "@/lib/locale";
-import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -16,39 +14,31 @@ export const revalidate = 300;
 
 /** Halaman About Us: profil, Vision, Mission, R&D dari `pages.ABOUT`. */
 export default async function AboutPage() {
-  const [content, locale] = await Promise.all([getAboutPageContent(), getLocale()]);
+  const content = await getAboutPageContent();
   const missions = content.mission;
 
   const blocks: { title: string; body?: string; list?: string[] }[] = [
-    { title: t("about", "vision", locale), body: content.vision },
-    { title: t("about", "mission", locale), list: missions },
-    { title: t("about", "rnd", locale), body: content.rnd },
+    { title: "Vision", body: content.vision },
+    { title: "Mission", list: missions },
+    { title: "Research & Development", body: content.rnd },
   ];
 
   return (
     <div>
       <section className="bg-coral">
         <div className="container-site py-10 text-center">
-          <h1 className="font-heading text-3xl font-bold text-white md:text-4xl">
-            {t("about", "title", locale)}
-          </h1>
+          <h1 className="font-heading text-3xl font-bold text-white md:text-4xl">About Us</h1>
           <div className="mt-2 flex justify-center [&_a]:!text-white [&_span]:!text-white/80">
-            <PublicBreadcrumb
-              items={[
-                { label: t("common", "home", locale), href: "/" },
-                { label: t("about", "breadcrumb", locale) },
-              ]}
-            />
+            <PublicBreadcrumb items={[{ label: "Home", href: "/" }, { label: "About Us" }]} />
           </div>
         </div>
       </section>
 
       <section className="container-site py-10 md:py-14">
-        <h2 className="font-heading text-2xl font-semibold text-ink-900">
-          {t("about", "sectionTitle", locale)}
-        </h2>
+        <h2 className="font-heading text-2xl font-semibold text-ink-900">Tentang YOFALAB</h2>
         <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
-          {content.profile || t("about", "noProfile", locale)}
+          {content.profile ||
+            "Profil perusahaan belum diisi. Konten About Us dikelola dari panel admin (/admin/pages)."}
         </p>
 
         <div className="mt-10 grid gap-8 md:grid-cols-3">
@@ -69,9 +59,7 @@ export default async function AboutPage() {
                 </ul>
               )}
               {!b.body && (!b.list || b.list.length === 0) && (
-                <p className="mt-3 font-body text-sm text-ink-400">
-                  {t("about", "notFilled", locale)}
-                </p>
+                <p className="mt-3 font-body text-sm text-ink-400">Belum diisi.</p>
               )}
             </div>
           ))}

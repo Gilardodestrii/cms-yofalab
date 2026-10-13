@@ -6,8 +6,6 @@ import { ProductCard } from "@/components/ui/product-card";
 import { Pagination } from "@/components/ui/pagination";
 import { SearchInput } from "@/components/ui/search-input";
 import type { Prisma } from "@prisma/client";
-import { getLocale } from "@/lib/locale";
-import { t } from "@/lib/i18n";
 
 export const metadata: Metadata = {
   title: "Product",
@@ -27,7 +25,7 @@ export default async function ProductPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [params, locale] = await Promise.all([searchParams, getLocale()]);
+  const params = await searchParams;
   const q = (typeof params.q === "string" ? params.q : "").trim().slice(0, 100);
   const categorySlug = typeof params.kategori === "string" ? params.kategori : "";
   const pageRaw = Number.parseInt(typeof params.page === "string" ? params.page : "1", 10);
@@ -73,7 +71,7 @@ export default async function ProductPage({
       db.product.count({ where }),
     ]);
   } catch {
-    // Database belum siap: tampilkan grid kosong.
+    // Database belum siap (mis. saat build): tampilkan grid kosong.
   }
 
   const totalPages = Math.max(1, Math.ceil(total / PER_PAGE));
@@ -83,18 +81,15 @@ export default async function ProductPage({
 
   return (
     <div>
-      {/* Banner */}
+      {/* Banner kategori judul */}
       <section className="bg-coral">
         <div className="container-site py-10 text-center">
           <h1 className="font-heading text-3xl font-bold text-white md:text-4xl">
-            {t("product", "title", locale)}
+            Product
           </h1>
           <div className="mt-2 flex justify-center [&_a]:!text-white [&_span]:!text-white/80">
             <PublicBreadcrumb
-              items={[
-                { label: t("common", "home", locale), href: "/" },
-                { label: t("product", "breadcrumb", locale) },
-              ]}
+              items={[{ label: "Home", href: "/" }, { label: "Product" }]}
             />
           </div>
         </div>
@@ -110,7 +105,7 @@ export default async function ProductPage({
               ? "rounded-full bg-brand-600 px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-white"
               : "rounded-full border border-line bg-surface px-4 py-2 font-heading text-xs font-semibold uppercase tracking-wide text-ink-600 hover:border-brand-600 hover:text-brand-600"}
           >
-            {t("product", "allCategory", locale)}
+            Semua
           </Link>
           {categories.map((c) => (
             <Link
@@ -128,13 +123,13 @@ export default async function ProductPage({
 
         {/* Pencarian */}
         <div className="mt-6 flex justify-center">
-          <SearchInput placeholder={t("product", "searchPlaceholder", locale)} />
+          <SearchInput placeholder="Cari produk…" />
         </div>
 
         {/* Grid 4-3-2-1 */}
         {items.length === 0 ? (
           <p className="py-16 text-center font-body text-base text-ink-400">
-            {t("product", "noProducts", locale)}
+            Belum ada produk{activeCategory ? ` di kategori ${activeCategory.name}` : ""}{q ? ` untuk “${q}”` : ""}.
           </p>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

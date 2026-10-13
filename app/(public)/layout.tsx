@@ -2,7 +2,6 @@ import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { getSiteSetting } from "@/lib/settings";
 import { siteConfig } from "@/lib/site";
-import { getLocale } from "@/lib/locale";
 
 /** JSON-LD Organization + WebSite untuk seluruh halaman publik. */
 const orgJsonLd = {
@@ -31,11 +30,11 @@ export default async function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const [site, locale] = await Promise.all([getSiteSetting(), getLocale()]);
+  const site = await getSiteSetting();
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header siteName={site.name} locale={locale} />
+      <Header siteName={site.name} />
       <main id="main" className="flex-1">
         {children}
       </main>
