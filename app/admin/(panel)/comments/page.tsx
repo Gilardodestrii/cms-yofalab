@@ -148,6 +148,7 @@ export default async function AdminCommentsPage({
         basePath="/admin/comments"
         columns={columns}
         rows={rows}
+        rowKey={(r) => r.id}
         total={total}
         page={page}
         perPage={perPage}

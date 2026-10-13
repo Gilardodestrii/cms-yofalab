@@ -157,6 +157,7 @@ export default async function AdminMessagesPage({
         basePath="/admin/messages"
         columns={columns}
         rows={rows}
+        rowKey={(r) => r.id}
         total={total}
         page={page}
         perPage={perPage}

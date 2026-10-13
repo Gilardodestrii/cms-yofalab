@@ -24,10 +24,12 @@ export function CommentRowActions({
   const run = async (
     fn: () => Promise<{ ok: true } | { ok: false; error: string }>,
     successMessage: string,
+    closeConfirm = false,
   ) => {
     setBusy(true);
     const result = await fn();
     setBusy(false);
+    if (closeConfirm) setConfirmOpen(false);
     if (result.ok) {
       toast(successMessage, "success");
       router.refresh();
@@ -87,7 +89,7 @@ export function CommentRowActions({
         confirmLabel="Hapus"
         danger
         busy={busy}
-        onConfirm={() => run(() => deleteCommentAction(id), "Komentar dihapus.")}
+        onConfirm={() => run(() => deleteCommentAction(id), "Komentar dihapus.", true)}
         onCancel={() => setConfirmOpen(false)}
       />
     </>

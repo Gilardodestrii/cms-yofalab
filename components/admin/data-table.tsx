@@ -27,6 +27,12 @@ export type DataTableProps<T> = {
   toolbar?: ReactNode;
   /** Query string aktif; parameter lain dipertahankan saat navigasi. */
   params: Record<string, string | string[] | undefined>;
+  /**
+   * Kunci stabil tiap baris (mis. `id`). Bila diisi, dipakai sebagai React
+   * `key` agar komponen aksi per baris tidak tertukar identitas saat data
+   * berubah (hapus/refresh). Default: indeks baris.
+   */
+  rowKey?: (row: T, index: number) => string;
 };
 
 const PER_PAGE_OPTIONS = [10, 25, 50];
@@ -52,6 +58,7 @@ export function DataTable<T>({
   emptyState,
   toolbar,
   params,
+  rowKey,
 }: DataTableProps<T>) {
   /** Susun href dengan perubahan parameter, mempertahankan sisanya. */
   const href = (updates: Record<string, string | null>) => {
@@ -177,7 +184,7 @@ export function DataTable<T>({
             ) : (
               rows.map((row, i) => (
                 <tr
-                  key={i}
+                  key={rowKey ? rowKey(row, i) : i}
                   className="h-12 border-b border-line last:border-0 hover:bg-[#FAF6FB]"
                 >
                   {columns.map((col) => (

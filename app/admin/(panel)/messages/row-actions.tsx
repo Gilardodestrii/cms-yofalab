@@ -24,10 +24,12 @@ export function MessageRowActions({
   const run = async (
     fn: () => Promise<{ ok: true } | { ok: false; error: string }>,
     successMessage: string,
+    closeConfirm = false,
   ) => {
     setBusy(true);
     const result = await fn();
     setBusy(false);
+    if (closeConfirm) setConfirmOpen(false);
     if (result.ok) {
       toast(successMessage, "success");
       router.refresh();
@@ -67,7 +69,7 @@ export function MessageRowActions({
         confirmLabel="Hapus"
         danger
         busy={busy}
-        onConfirm={() => run(() => deleteMessageAction(id), "Pesan dihapus.")}
+        onConfirm={() => run(() => deleteMessageAction(id), "Pesan dihapus.", true)}
         onCancel={() => setConfirmOpen(false)}
       />
     </>
