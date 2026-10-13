@@ -194,33 +194,31 @@ export default async function HomePage() {
       </section>
 
       {/* Keunggulan */}
-      <section className="bg-brand-50">
-        <div className="container-site py-12">
-          <div className="panel-card grid gap-8 p-8 md:grid-cols-[3fr_2fr] md:items-center">
-            <ul className="flex flex-col gap-6">
-              {content.advantages.map((a, i) => (
-                <li key={a.title} className="flex gap-4">
-                  <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-600 text-brand-600">
-                    {ADVANTAGE_ICONS[i % ADVANTAGE_ICONS.length]}
-                  </span>
-                  <div>
-                    <h3 className="font-heading text-lg font-semibold text-brand-600">{a.title}</h3>
-                    <p className="mt-1 font-body text-sm text-ink-600">{a.body}</p>
-                  </div>
-                </li>
-              ))}
-            </ul>
-            {content.advantagesImagePath ? (
-              <div className="overflow-hidden rounded-md bg-surface-muted">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={content.advantagesImagePath}
-                  alt=""
-                  className="aspect-[4/3] w-full object-cover"
-                />
-              </div>
-            ) : null}
-          </div>
+      <section className="container-site py-10">
+        <div className="grid items-center gap-8 md:grid-cols-2">
+          <ul className="flex flex-col gap-6">
+            {content.advantages.map((a, i) => (
+              <li key={a.title} className="flex gap-4">
+                <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-brand-600 text-brand-600">
+                  {ADVANTAGE_ICONS[i % ADVANTAGE_ICONS.length]}
+                </span>
+                <div>
+                  <h3 className="font-heading text-lg font-semibold text-brand-600">{a.title}</h3>
+                  <p className="mt-1 font-body text-sm text-ink-600">{a.body}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {content.advantagesImagePath ? (
+            <div className="overflow-hidden rounded-md bg-surface-muted">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={content.advantagesImagePath}
+                alt=""
+                className="aspect-[4/3] w-full object-cover"
+              />
+            </div>
+          ) : null}
         </div>
       </section>
 
