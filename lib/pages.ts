@@ -33,6 +33,8 @@ export async function getHomePageContent(): Promise<HomePageContent> {
     getToKnowImagePath: data.getToKnowImagePath || DEFAULT_HOME_CONTENT.getToKnowImagePath,
     advantages:
       data.advantages.length > 0 ? data.advantages : DEFAULT_HOME_CONTENT.advantages,
+    advantagesImagePath:
+      data.advantagesImagePath || DEFAULT_HOME_CONTENT.advantagesImagePath,
   };
 }
 

@@ -39,6 +39,8 @@ export const homePageSchema = z.object({
   /** Path media gambar blok Get to Know (kosong = tanpa gambar). */
   getToKnowImagePath: z.string().trim().max(500).default(""),
   advantages: z.array(advantageSchema).max(6).default([]),
+  /** Path media gambar blok keunggulan (kosong = tanpa gambar). */
+  advantagesImagePath: z.string().trim().max(500).default(""),
 });
 
 export type HomePageContent = z.infer<typeof homePageSchema>;
@@ -83,6 +85,7 @@ export const DEFAULT_HOME_CONTENT: HomePageContent = {
       body: "Pelatihan penggunaan alat oleh tim ahli agar staf laboratorium siap pakai sejak hari pertama.",
     },
   ],
+  advantagesImagePath: "",
 };
 
 /** Isi default About bila `pages.ABOUT` belum diisi. */

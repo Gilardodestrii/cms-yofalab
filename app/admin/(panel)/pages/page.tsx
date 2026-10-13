@@ -34,6 +34,7 @@ export default async function AdminPagesPage() {
           getToKnowBody: home.getToKnowBody,
           getToKnowImagePath: home.getToKnowImagePath,
           advantages: home.advantages,
+          advantagesImagePath: home.advantagesImagePath,
         }}
       />
       <AboutPageForm

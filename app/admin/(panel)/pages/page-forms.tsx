@@ -36,6 +36,72 @@ function toAdvantageLines(pairs: { title: string; body: string }[]): string {
   return pairs.map((p) => `${p.title}|${p.body}`).join("\n");
 }
 
+/**
+ * Field gambar tunggal opsional: preview + pilih dari pustaka media.
+ * Nilai dikirim sebagai hidden input JSON — format sama dengan MediaPicker,
+ * sehingga action cukup membacanya lewat `parseImagePath`.
+ */
+function SingleImageField({
+  name,
+  label,
+  hint,
+  initialPath,
+}: {
+  name: string;
+  label: string;
+  hint: string;
+  initialPath: string;
+}) {
+  const [image, setImage] = useState<MediaItem | null>(
+    initialPath
+      ? {
+          id: "existing",
+          path: initialPath,
+          fileName: initialPath.split("/").pop() ?? "gambar",
+          altText: null,
+          mimeType: "",
+        }
+      : null,
+  );
+  const [open, setOpen] = useState(false);
+
+  return (
+    <FormField htmlFor={name} label={label} hint={hint}>
+      <input type="hidden" id={name} name={name} value={image ? JSON.stringify(image) : ""} />
+      <div className="flex flex-wrap items-center gap-3">
+        {image ? (
+          <span className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={image.path}
+              alt={image.altText ?? image.fileName}
+              className="h-20 w-28 rounded-sm border border-line object-cover"
+            />
+            <button
+              type="button"
+              onClick={() => setImage(null)}
+              className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-danger font-body text-xs text-white"
+              aria-label={`Hapus gambar ${image.fileName}`}
+            >
+              ×
+            </button>
+          </span>
+        ) : (
+          <span className="font-body text-sm text-ink-400">Belum ada gambar.</span>
+        )}
+        <button
+          type="button"
+          className="btn-admin-secondary h-8 px-3 text-xs"
+          onClick={() => setOpen(true)}
+        >
+          {image ? "Ganti gambar" : "Pilih gambar"}
+        </button>
+      </div>
+      <MediaPicker open={open} onClose={() => setOpen(false)} onSelect={setImage} />
+    </FormField>
+  );
+}
+
 /** Editor blok Home (`pages.HOME`). */
 export function HomePageForm({ initial }: { initial: {
   heroTitle: string;
@@ -45,26 +111,13 @@ export function HomePageForm({ initial }: { initial: {
   getToKnowBody: string;
   getToKnowImagePath: string;
   advantages: { title: string; body: string }[];
+  advantagesImagePath: string;
 } }) {
   const [state, formAction, pending] = useActionState(saveHomePageAction, initialState);
 
   // Slide tetap dikelola sebagai daftar gambar; editor ringkas: satu gambar per baris.
   const [slides, setSlides] = useState<MediaItem[]>([]);
   const [pickerOpen, setPickerOpen] = useState(false);
-
-  // Gambar blok Get to Know (tunggal, opsional) — tampil di sebelah kiri teks.
-  const [knowImage, setKnowImage] = useState<MediaItem | null>(
-    initial.getToKnowImagePath
-      ? {
-          id: "existing",
-          path: initial.getToKnowImagePath,
-          fileName: initial.getToKnowImagePath.split("/").pop() ?? "gambar",
-          altText: null,
-          mimeType: "",
-        }
-      : null,
-  );
-  const [knowPickerOpen, setKnowPickerOpen] = useState(false);
 
   return (
     <form action={formAction} noValidate className="panel-card p-6">
@@ -92,51 +145,23 @@ export function HomePageForm({ initial }: { initial: {
         <TextArea id="getToKnowBody" name="getToKnowBody" rows={4} maxLength={2000} defaultValue={initial.getToKnowBody} />
       </FormField>
 
-      <FormField
-        htmlFor="getToKnowImage"
+      <SingleImageField
+        name="getToKnowImage"
         label="Gambar blok Get to Know"
         hint="Opsional; tampil di sebelah kiri teks. Pilih dari pustaka media."
-      >
-        <input
-          type="hidden"
-          id="getToKnowImage"
-          name="getToKnowImage"
-          value={knowImage ? JSON.stringify(knowImage) : ""}
-        />
-        <div className="flex flex-wrap items-center gap-3">
-          {knowImage ? (
-            <span className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={knowImage.path}
-                alt={knowImage.altText ?? knowImage.fileName}
-                className="h-20 w-28 rounded-sm border border-line object-cover"
-              />
-              <button
-                type="button"
-                onClick={() => setKnowImage(null)}
-                className="absolute -right-2 -top-2 h-6 w-6 rounded-full bg-danger font-body text-xs text-white"
-                aria-label={`Hapus gambar ${knowImage.fileName}`}
-              >
-                ×
-              </button>
-            </span>
-          ) : (
-            <span className="font-body text-sm text-ink-400">Belum ada gambar.</span>
-          )}
-          <button
-            type="button"
-            className="btn-admin-secondary h-8 px-3 text-xs"
-            onClick={() => setKnowPickerOpen(true)}
-          >
-            {knowImage ? "Ganti gambar" : "Pilih gambar"}
-          </button>
-        </div>
-      </FormField>
+        initialPath={initial.getToKnowImagePath}
+      />
 
       <FormField htmlFor="advantages" label="Tiga keunggulan" hint="Format: judul|isi — satu per baris (maks 6).">
         <TextArea id="advantages" name="advantages" rows={6} defaultValue={toAdvantageLines(initial.advantages)} />
       </FormField>
+
+      <SingleImageField
+        name="advantagesImage"
+        label="Gambar blok keunggulan"
+        hint="Opsional; tampil di sebelah kanan daftar keunggulan."
+        initialPath={initial.advantagesImagePath}
+      />
 
       <FormField htmlFor="slides" label="Gambar hero tambahan" hint="Opsional; pilih gambar dari pustaka media.">
         <input type="hidden" id="slides" name="slides" value={JSON.stringify(slides)} />
@@ -168,11 +193,6 @@ export function HomePageForm({ initial }: { initial: {
         open={pickerOpen}
         onClose={() => setPickerOpen(false)}
         onSelect={(m) => setSlides((prev) => [...prev, m])}
-      />
-      <MediaPicker
-        open={knowPickerOpen}
-        onClose={() => setKnowPickerOpen(false)}
-        onSelect={(m) => setKnowImage(m)}
       />
     </form>
   );

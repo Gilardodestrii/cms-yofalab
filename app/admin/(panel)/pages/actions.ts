@@ -103,6 +103,7 @@ export async function saveHomePageAction(
     getToKnowBody: formData.get("getToKnowBody"),
     getToKnowImagePath: parseImagePath(formData.get("getToKnowImage")),
     advantages: parseAdvantages(formData.get("advantages")),
+    advantagesImagePath: parseImagePath(formData.get("advantagesImage")),
   });
   if (!parsed.success) {
     return { error: "Periksa kembali isian formulir." };
