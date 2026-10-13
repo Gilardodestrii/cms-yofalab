@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
 
-/** ISR 5 menit: blok Home dari `pages.HOME` + produk/artikel terbaru. */
+/** ISR 5 menit: blok Home dari `pages.HOME` + produk/artikel terbaru. Searchbar memakai SearchInput bersama. */
 export const revalidate = 300;
 
 /**

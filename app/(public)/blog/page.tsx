@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/blog" },
 };
 
-/** ISR 5 menit: daftar artikel menyusul artikel baru terjadwal. */
+/** ISR 5 menit: daftar artikel menyusul artikel baru terjadwal. Searchbar memakai SearchInput bersama. */
 export const revalidate = 300;
 
 const PER_PAGE = 9;

@@ -3,7 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
-/** Kolom pencarian publik (menulis `q` ke query string). Perlu Suspense untuk useSearchParams. */
+/** Kolom pencarian publik (menulis `q` ke query string). Perlu Suspense untuk useSearchParams.
+ * Gaya: latar transparan/putih, border brand-600, teks dan ikon hitam. */
 function SearchInputInner({
   placeholder = "Cari…",
   name = "q",
@@ -37,14 +38,25 @@ function SearchInputInner({
         defaultValue={searchParams.get(name) ?? ""}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="h-11 w-full rounded-full bg-brand-300/60 pl-5 pr-12 font-body text-sm text-ink-900 placeholder:text-ink-600 focus:outline-none focus:ring-2 focus:ring-brand-600"
+        className="h-11 w-full rounded-full border border-brand-600 bg-transparent pl-5 pr-12 font-body text-sm text-ink-900 placeholder:text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
       />
       <button
         type="submit"
         aria-label="Cari"
         className="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full text-ink-900 hover:text-brand-600"
       >
-        ⌕
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          className="h-5 w-5"
+        >
+          <circle cx="11" cy="11" r="7" />
+          <path d="m20 20-3.5-3.5" />
+        </svg>
       </button>
     </form>
   );
@@ -52,7 +64,14 @@ function SearchInputInner({
 
 export function SearchInput(props: { placeholder?: string; name?: string; basePath?: string }) {
   return (
-    <Suspense fallback={<div className="h-11 w-full max-w-md rounded-full bg-brand-300/40" aria-hidden="true" />}>
+    <Suspense
+      fallback={
+        <div
+          className="h-11 w-full max-w-md rounded-full border border-brand-600 bg-transparent"
+          aria-hidden="true"
+        />
+      }
+    >
       <SearchInputInner {...props} />
     </Suspense>
   );
