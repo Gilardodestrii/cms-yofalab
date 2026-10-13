@@ -4,7 +4,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 /** Kolom pencarian publik (menulis `q` ke query string). Perlu Suspense untuk useSearchParams.
- * Gaya: latar transparan/putih, border brand-600, teks dan ikon hitam. */
+ * Gaya: latar transparan/putih, border default brand-600 (#9B4478),
+ * fokus/klik brand-800 (#683352); teks dan ikon hitam. */
 function SearchInputInner({
   placeholder = "Cari…",
   name = "q",
@@ -38,7 +39,7 @@ function SearchInputInner({
         defaultValue={searchParams.get(name) ?? ""}
         placeholder={placeholder}
         aria-label={placeholder}
-        className="h-11 w-full rounded-full border border-brand-600 bg-transparent pl-5 pr-12 font-body text-sm text-ink-900 placeholder:text-ink-900 focus:outline-none focus:ring-2 focus:ring-brand-600"
+        className="h-11 w-full rounded-full border border-brand-600 bg-transparent pl-5 pr-12 font-body text-sm text-ink-900 placeholder:text-ink-900 focus:border-brand-800 focus:outline-none focus:ring-2 focus:ring-brand-800"
       />
       <button
         type="submit"

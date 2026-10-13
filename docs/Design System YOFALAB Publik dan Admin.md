@@ -148,7 +148,7 @@ export default {
       colors: {
         brand: {
           50: "#F8F0FB", 300: "#E7A6C9", 500: "#B5628F",
-          600: "#9B4478", 700: "#7A2F6B", link: "#FFD6EC",
+          600: "#9B4478", 700: "#7A2F6B", 800: "#683352", link: "#FFD6EC",
         },
         ink: { 900: "#2B2B2B", 600: "#5A5A5A", 400: "#8A8A8A" },
         line: "#E6E6E6",
