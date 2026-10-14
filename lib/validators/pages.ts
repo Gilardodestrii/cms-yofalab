@@ -48,6 +48,8 @@ export type HomePageContent = z.infer<typeof homePageSchema>;
 /** Konten halaman About Us (`pages.ABOUT`). */
 export const aboutPageSchema = z.object({
   profile: z.string().trim().max(4000).default(""),
+  /** Path media foto profil perusahaan (kosong = tanpa foto). */
+  profileImagePath: z.string().trim().max(500).default(""),
   vision: z.string().trim().max(2000).default(""),
   /** Misi sebagai daftar poin (satu baris per poin di textarea). */
   mission: z.array(z.string().trim().max(500)).max(20).default([]),
@@ -91,6 +93,7 @@ export const DEFAULT_HOME_CONTENT: HomePageContent = {
 /** Isi default About bila `pages.ABOUT` belum diisi. */
 export const DEFAULT_ABOUT_CONTENT: AboutPageContent = {
   profile: "",
+  profileImagePath: "",
   vision: "",
   mission: [],
   rnd: "",

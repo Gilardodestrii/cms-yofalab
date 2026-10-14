@@ -202,6 +202,7 @@ export function HomePageForm({ initial }: { initial: {
 /** Editor About Us (`pages.ABOUT`). */
 export function AboutPageForm({ initial }: { initial: {
   profile: string;
+  profileImagePath: string;
   vision: string;
   mission: string[];
   rnd: string;
@@ -212,10 +213,16 @@ export function AboutPageForm({ initial }: { initial: {
     <form action={formAction} noValidate className="panel-card p-6">
       <h2 className="font-heading text-base font-semibold text-ink-900">Halaman About Us</h2>
       <p className="mt-1 mb-4 font-body text-sm text-ink-600">
-        Profil, Vision, Mission, dan R&D tampil di halaman <code>/about</code>.
+        Foto, profil, Vision, Mission, dan R&D tampil di halaman <code>/about</code>.
       </p>
       <Notice state={state} />
 
+      <SingleImageField
+        name="profileImage"
+        label="Foto perusahaan"
+        hint="Tampil di atas judul Tentang YOFALAB. Pilih dari pustaka media."
+        initialPath={initial.profileImagePath}
+      />
       <FormField htmlFor="profile" label="Profil perusahaan">
         <TextArea id="profile" name="profile" rows={6} maxLength={4000} defaultValue={initial.profile} />
       </FormField>

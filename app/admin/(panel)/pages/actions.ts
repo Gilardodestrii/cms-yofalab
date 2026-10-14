@@ -121,6 +121,7 @@ export async function saveAboutPageAction(
 
   const parsed = aboutPageSchema.safeParse({
     profile: formData.get("profile"),
+    profileImagePath: parseImagePath(formData.get("profileImage")),
     vision: formData.get("vision"),
     mission: lines(formData.get("mission"), 20),
     rnd: formData.get("rnd"),

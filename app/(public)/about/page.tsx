@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { PublicBreadcrumb } from "@/components/ui/public-breadcrumb";
 import { getAboutPageContent } from "@/lib/pages";
 
@@ -35,6 +36,17 @@ export default async function AboutPage() {
       </section>
 
       <section className="container-site py-10 md:py-14">
+        {content.profileImagePath && (
+          <div className="relative mb-8 aspect-[16/9] w-full overflow-hidden rounded-sm md:aspect-[21/9]">
+            <Image
+              src={content.profileImagePath}
+              alt="Foto perusahaan YOFALAB"
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 1152px"
+            />
+          </div>
+        )}
         <h2 className="font-heading text-2xl font-semibold text-ink-900">Tentang YOFALAB</h2>
         <p className="mt-4 max-w-reading whitespace-pre-line font-body text-base text-ink-600">
           {content.profile ||

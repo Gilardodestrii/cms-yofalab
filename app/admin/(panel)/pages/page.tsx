@@ -40,6 +40,7 @@ export default async function AdminPagesPage() {
       <AboutPageForm
         initial={{
           profile: about.profile,
+          profileImagePath: about.profileImagePath,
           vision: about.vision,
           mission: about.mission,
           rnd: about.rnd,
