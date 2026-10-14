@@ -34,7 +34,7 @@ export default async function PublicLayout({
 
   return (
     <div className="flex min-h-screen flex-col">
-      <Header siteName={site.name} />
+      <Header siteName={site.name} logoPath={site.logoPath} />
       <main id="main" className="flex-1">
         {children}
       </main>

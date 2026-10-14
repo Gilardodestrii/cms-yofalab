@@ -25,6 +25,10 @@ export type FooterSetting = z.infer<typeof footerSettingSchema>;
 /** Identitas + SEO default situs (`site_settings.site`). */
 export const siteSettingSchema = z.object({
   name: z.string().trim().min(1, "Nama situs wajib diisi").max(120),
+  /** Logo header (latar terang). Path `/uploads/...`, dikelola via MediaPicker. */
+  logoPath: z.string().trim().max(300).default(""),
+  /** Logo footer putih (latar brand-600). Path `/uploads/...`, dikelola via MediaPicker. */
+  logoWhitePath: z.string().trim().max(300).default(""),
   tagline: z.string().trim().max(190).default(""),
   seoTitle: z.string().trim().max(190).default(""),
   seoDescription: z.string().trim().max(320).default(""),

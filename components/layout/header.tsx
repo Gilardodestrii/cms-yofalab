@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { siteConfig } from "@/lib/site";
@@ -9,8 +10,10 @@ import { siteConfig } from "@/lib/site";
  * Header publik: tinggi 110 px, latar putih, garis bawah 1 px.
  * Menu aktif berwarna brand-500 dengan garis bawah 2 px.
  * Di mobile menjadi panel geser dengan ikon burger.
+ * Bila `logoPath` terisi (diatur di Pengaturan → Logo Situs), tampil logo;
+ * bila kosong, fallback tulisan YOFALAB.
  */
-export function Header({ siteName }: { siteName: string }) {
+export function Header({ siteName, logoPath }: { siteName: string; logoPath?: string }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
@@ -22,10 +25,21 @@ export function Header({ siteName }: { siteName: string }) {
       <div className="container-site flex h-[110px] items-center justify-between">
         <Link
           href="/"
-          className="font-heading text-xl font-bold text-brand-600"
+          className="flex items-center font-heading text-xl font-bold text-brand-600"
           aria-label={`${siteName} - Home`}
         >
-          YOFALAB
+          {logoPath ? (
+            <Image
+              src={logoPath}
+              alt="Logo YOFALAB"
+              width={180}
+              height={60}
+              className="h-12 w-auto"
+              priority
+            />
+          ) : (
+            "YOFALAB"
+          )}
         </Link>
 
         <nav

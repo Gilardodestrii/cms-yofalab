@@ -90,9 +90,9 @@
     @apply inline-flex h-10 items-center justify-center rounded-sm bg-brand-600 px-5 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:bg-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-600 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
-  /* Tombol hero: latar brand-700, radius md. */
+  /* Tombol hero: latar brand-700, radius sm (disamakan dengan tombol garis). */
   .btn-hero {
-    @apply inline-flex h-12 items-center justify-center rounded-md bg-brand-700 px-6 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
+    @apply inline-flex h-12 items-center justify-center rounded-sm bg-brand-700 px-6 font-heading text-sm font-semibold text-white transition-colors duration-150 ease-out hover:brightness-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2;
   }
 
   /* Tombol garis (Download Brosur). */

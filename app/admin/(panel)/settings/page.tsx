@@ -12,6 +12,7 @@ import {
 } from "@/lib/settings";
 import { uploadSettingSchema } from "@/lib/validators/settings";
 import { FormField, SettingsSection, TextArea, TextInput } from "./settings-section";
+import { SingleImageField } from "../pages/page-forms";
 import {
   saveContactSettingAction,
   saveFooterSettingAction,
@@ -51,9 +52,21 @@ export default async function AdminSettingsPage() {
 
       <SettingsSection
         title="Identitas & SEO Default"
-        description="Dipakai sebagai nama situs dan meta default bila halaman tidak mengisi SEO sendiri."
+        description="Logo tampil di header (berwarna) dan footer (putih). Bila kosong, tampil tulisan YOFALAB."
         action={saveSiteSettingAction}
       >
+        <SingleImageField
+          name="logoImage"
+          label="Logo header"
+          hint="Logo berwarna di latar putih. Pilih dari pustaka media."
+          initialPath={site.logoPath}
+        />
+        <SingleImageField
+          name="logoWhiteImage"
+          label="Logo footer (putih)"
+          hint="Logo putih di latar brand-600. Pilih dari pustaka media."
+          initialPath={site.logoWhitePath}
+        />
         <FormField htmlFor="name" label="Nama situs" required>
           <TextInput id="name" name="name" required maxLength={120} defaultValue={site.name} />
         </FormField>

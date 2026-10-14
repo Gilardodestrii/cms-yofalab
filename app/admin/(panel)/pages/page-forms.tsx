@@ -38,10 +38,11 @@ function toAdvantageLines(pairs: { title: string; body: string }[]): string {
 
 /**
  * Field gambar tunggal opsional: preview + pilih dari pustaka media.
+ * Diekspor agar dipakai ulang formulir pengaturan (logo situs).
  * Nilai dikirim sebagai hidden input JSON — format sama dengan MediaPicker,
  * sehingga action cukup membacanya lewat `parseImagePath`.
  */
-function SingleImageField({
+export function SingleImageField({
   name,
   label,
   hint,

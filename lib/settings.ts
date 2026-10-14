@@ -40,6 +40,8 @@ export const DEFAULT_FOOTER: FooterSetting = {
 
 export const DEFAULT_SITE: SiteSetting = {
   name: "YOFALAB Indonesia",
+  logoPath: "",
+  logoWhitePath: "",
   tagline:
     "Company profile dan katalog produk alat kesehatan YOFALAB Indonesia.",
   seoTitle: "YOFALAB Indonesia — Alat Kesehatan & Reagen Laboratorium",

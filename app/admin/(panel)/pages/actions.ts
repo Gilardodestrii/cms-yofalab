@@ -6,6 +6,7 @@ import { recordActivity } from "@/lib/activity";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { CONTENT_ROLES, hasRole } from "@/lib/auth/roles";
 import { aboutPageSchema, homePageSchema } from "@/lib/validators/pages";
+import { parseImagePath } from "@/lib/image-path";
 import type { Prisma } from "@prisma/client";
 
 export type PageActionState = {
@@ -48,18 +49,6 @@ function parseAdvantages(value: FormDataEntryValue | null) {
     const [title = "", ...rest] = line.split("|");
     return { title: title.trim(), body: rest.join("|").trim() };
   });
-}
-
-/** Path gambar tunggal dari hidden input JSON (dikirim komponen MediaPicker). */
-function parseImagePath(value: FormDataEntryValue | null): string {
-  if (typeof value !== "string" || !value.trim()) return "";
-  try {
-    const raw = JSON.parse(value) as { path?: string };
-    const path = raw?.path;
-    return typeof path === "string" && path.startsWith("/uploads/") ? path : "";
-  } catch {
-    return "";
-  }
 }
 
 /** Slide hero dari hidden input JSON (dikirim komponen MediaPicker). */

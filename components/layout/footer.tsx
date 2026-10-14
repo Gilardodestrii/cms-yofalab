@@ -1,13 +1,20 @@
 import Link from "next/link";
+import Image from "next/image";
 import { siteConfig } from "@/lib/site";
-import { getContactSetting, getFooterSetting, whatsappLink } from "@/lib/settings";
+import { getContactSetting, getFooterSetting, getSiteSetting, whatsappLink } from "@/lib/settings";
 
 /**
  * Footer publik: latar brand-600, teks terang, tautan memakai brand-link.
  * Data kontak dan copyright diambil dari `site_settings` (dapat diedit admin).
+ * Bila logo putih terisi (Pengaturan → Logo Situs), tampil logo; bila kosong,
+ * fallback tulisan YOFALAB.
  */
 export async function Footer() {
-  const [contact, footer] = await Promise.all([getContactSetting(), getFooterSetting()]);
+  const [contact, footer, site] = await Promise.all([
+    getContactSetting(),
+    getFooterSetting(),
+    getSiteSetting(),
+  ]);
 
   const socials = [
     { label: "Facebook", href: footer.facebook },
@@ -22,7 +29,17 @@ export async function Footer() {
     <footer className="bg-brand-600 text-white">
       <div className="container-site grid gap-8 py-12 md:grid-cols-3">
         <div>
-          <p className="font-heading text-lg font-bold">YOFALAB</p>
+          {site.logoWhitePath ? (
+            <Image
+              src={site.logoWhitePath}
+              alt="Logo YOFALAB"
+              width={180}
+              height={60}
+              className="h-12 w-auto"
+            />
+          ) : (
+            <p className="font-heading text-lg font-bold">YOFALAB</p>
+          )}
           <p className="mt-3 font-body text-sm leading-relaxed text-brand-link">
             {footer.description || contact.address}
           </p>

@@ -5,6 +5,7 @@ import { db } from "@/lib/db";
 import { recordActivity } from "@/lib/activity";
 import { getCurrentUser } from "@/lib/auth/guards";
 import { hasRole } from "@/lib/auth/roles";
+import { parseImagePath } from "@/lib/image-path";
 import {
   contactSettingSchema,
   footerSettingSchema,
@@ -123,6 +124,8 @@ export async function saveSiteSettingAction(
 
   const parsed = siteSettingSchema.safeParse({
     name: formData.get("name"),
+    logoPath: parseImagePath(formData.get("logoImage")),
+    logoWhitePath: parseImagePath(formData.get("logoWhiteImage")),
     tagline: formData.get("tagline"),
     seoTitle: formData.get("seoTitle"),
     seoDescription: formData.get("seoDescription"),
