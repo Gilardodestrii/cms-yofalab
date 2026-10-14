@@ -17,6 +17,55 @@ export const metadata: Metadata = {
 export const revalidate = 300;
 
 /**
+ * Ikon statistik Home, dicocokkan dari label entri (fallback urutan).
+ * Sesuai mockup: gedung (established), kubus (products), dua orang (partners).
+ * SVG inline; proyek ini tidak memakai pustaka ikon.
+ */
+const STAT_ICONS: { match: RegExp; icon: React.ReactNode }[] = [
+  {
+    // Gedung kantor — established.
+    match: /establish|berdiri|tahun|since|sejak/i,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden="true">
+        <rect x="4" y="3" width="16" height="18" rx="1" />
+        <path d="M9 21v-4h6v4" />
+        <path d="M8 7h2M14 7h2M8 11h2M14 11h2M8 15h2M14 15h2" />
+      </svg>
+    ),
+  },
+  {
+    // Kubus 3D — products.
+    match: /product|produk/i,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden="true">
+        <path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z" />
+        <path d="m3.3 7 8.7 5 8.7-5" />
+        <path d="M12 22V12" />
+      </svg>
+    ),
+  },
+  {
+    // Dua orang — partners.
+    match: /partner|mitra|client|klien|customer/i,
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6" aria-hidden="true">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+        <circle cx="9" cy="7" r="4" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+      </svg>
+    ),
+  },
+];
+
+/** Ikon statistik berdasarkan label; fallback gedung bila tidak cocok. */
+function statIcon(label: string, index: number): React.ReactNode {
+  const found = STAT_ICONS.find((s) => s.match.test(label));
+  if (found) return found.icon;
+  return STAT_ICONS[index % STAT_ICONS.length].icon;
+}
+
+/**
  * Ikon bulat untuk daftar keunggulan. Dijajarkan berdasarkan urutan entri —
  * sesuai mockup: jempol (mutu), truk (dukungan), perisai (pelatihan).
  * SVG inline; proyek ini tidak memakai pustaka ikon.
@@ -150,10 +199,13 @@ export default async function HomePage() {
       {/* Statistik */}
       <section className="container-site py-10">
         <dl className="grid grid-cols-1 gap-4 text-center sm:grid-cols-3">
-          {stats.map((s) => (
-            <div key={s.label} className="panel-card p-6">
-              <dt className="order-2 mt-1 font-body text-sm text-ink-600">{s.label}</dt>
-              <dd className="font-heading text-3xl font-bold text-brand-600">{s.value}</dd>
+          {stats.map((s, i) => (
+            <div key={s.label} className="flex flex-col items-center rounded-md bg-surface p-6 shadow-card">
+              <dd className="flex flex-col items-center">
+                <span className="text-brand-600">{statIcon(s.label, i)}</span>
+                <span className="mt-2 font-heading text-3xl font-bold text-ink-900">{s.value}</span>
+              </dd>
+              <dt className="mt-1 font-body text-sm text-brand-600">{s.label}</dt>
             </div>
           ))}
         </dl>
